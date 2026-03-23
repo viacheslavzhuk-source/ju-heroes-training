@@ -89,6 +89,8 @@ body {
 .profile-card {
     text-align: center;
     margin-top: 40px;
+    position: relative;
+    z-index: 10;
 }
 .profile-card h1 {
     font-size: 1.8em;
@@ -160,7 +162,8 @@ body {
     gap: 8px;
 }
 .btn:active { transform: scale(0.96); }
-.btn:disabled { opacity: 0.4; cursor: default; }
+.btn:disabled { opacity: 0.4; cursor: default; pointer-events: none; }
+.btn-primary:not(:disabled) { cursor: pointer; }
 .btn-primary {
     background: linear-gradient(135deg, var(--primary), var(--primary-light));
     color: white;

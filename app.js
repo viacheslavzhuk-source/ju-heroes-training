@@ -175,6 +175,7 @@ function init() {
 function showScreen(id) {
     document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
     document.getElementById(id).classList.add('active');
+    document.getElementById('navbar').style.display = (id === 'profile-screen') ? 'none' : '';
     if (id === 'dashboard-screen') updateNav();
 }
 
@@ -201,7 +202,17 @@ document.getElementById('profile-age').addEventListener('input', checkProfileRea
 function checkProfileReady() {
     const name = document.getElementById('profile-name').value.trim();
     const age = document.getElementById('profile-age').value;
-    document.getElementById('profile-save-btn').disabled = !selectedAvatar || !name || !age;
+    const ready = selectedAvatar && name && age;
+    const btn = document.getElementById('profile-save-btn');
+    btn.disabled = !ready;
+
+    // Show hint about what's missing
+    let hint = '';
+    if (!selectedAvatar) hint = 'Выбери аватар';
+    else if (!name) hint = 'Введи имя героя';
+    else if (!age) hint = 'Введи возраст';
+
+    btn.textContent = ready ? 'Начать тренировки!' : (hint || 'Начать тренировки!');
 }
 
 document.getElementById('profile-save-btn').addEventListener('click', () => {
