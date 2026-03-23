@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JU Heroes Training — Тренировки Героев</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="app">
+        <!-- Nav -->
+        <nav id="navbar">
+            <div class="nav-brand">💪 JU Heroes Training</div>
+            <div class="nav-user">
+                <span id="nav-points">0 ⭐</span>
+                <span id="nav-level">Уровень 1</span>
+                <button id="nav-profile-btn" class="nav-btn">👤</button>
+            </div>
+        </nav>
+
+        <!-- Profile Setup (first visit) -->
+        <div id="profile-screen" class="screen active">
+            <div class="card profile-card">
+                <h1>💪 JU Heroes Training</h1>
+                <p class="tagline">Стань настоящим героем через тренировки!</p>
+                <div class="avatar-picker">
+                    <h3>Выбери аватар:</h3>
+                    <div class="avatars">
+                        <button class="avatar-btn" data-avatar="🦸">🦸</button>
+                        <button class="avatar-btn" data-avatar="🦸‍♀️">🦸‍♀️</button>
+                        <button class="avatar-btn" data-avatar="🥷">🥷</button>
+                        <button class="avatar-btn" data-avatar="🧗">🧗</button>
+                        <button class="avatar-btn" data-avatar="🤸">🤸</button>
+                        <button class="avatar-btn" data-avatar="🏋️">🏋️</button>
+                    </div>
+                </div>
+                <input type="text" id="profile-name" placeholder="Твоё имя героя" maxlength="20" autocomplete="off">
+                <input type="number" id="profile-age" placeholder="Возраст" min="5" max="17">
+                <button id="profile-save-btn" class="btn btn-primary" disabled>Начать тренировки!</button>
+            </div>
+        </div>
+
+        <!-- Main Dashboard -->
+        <div id="dashboard-screen" class="screen">
+            <!-- Hero Card -->
+            <div class="card hero-summary">
+                <div class="hero-info">
+                    <span id="dash-avatar" class="big-avatar"></span>
+                    <div>
+                        <h2 id="dash-name"></h2>
+                        <div class="xp-bar"><div id="xp-fill"></div></div>
+                        <small id="dash-xp-text"></small>
+                    </div>
+                </div>
+                <div class="hero-stats">
+                    <div class="stat"><span class="stat-num" id="stat-points">0</span><span class="stat-label">Баллы</span></div>
+                    <div class="stat"><span class="stat-num" id="stat-quests">0</span><span class="stat-label">Квесты</span></div>
+                    <div class="stat"><span class="stat-num" id="stat-streak">0</span><span class="stat-label">Серия дней</span></div>
+                </div>
+            </div>
+
+            <!-- Tab Nav -->
+            <div class="tabs">
+                <button class="tab active" data-tab="quests">🎯 Квесты</button>
+                <button class="tab" data-tab="history">📋 Мои видео</button>
+                <button class="tab" data-tab="achievements">🏆 Достижения</button>
+                <button class="tab" data-tab="leaderboard">🥇 Рейтинг</button>
+            </div>
+
+            <!-- Quests Tab -->
+            <div id="tab-quests" class="tab-content active">
+                <div class="quest-categories">
+                    <button class="cat-btn active" data-cat="all">Все</button>
+                    <button class="cat-btn" data-cat="pullup">Турник</button>
+                    <button class="cat-btn" data-cat="pushup">Отжимания</button>
+                    <button class="cat-btn" data-cat="bars">Брусья</button>
+                    <button class="cat-btn" data-cat="abs">Пресс</button>
+                </div>
+                <div id="quest-list" class="quest-list"></div>
+            </div>
+
+            <!-- History Tab -->
+            <div id="tab-history" class="tab-content">
+                <div id="history-list" class="history-list"></div>
+                <div id="history-empty" class="empty-state">
+                    <span class="empty-icon">📹</span>
+                    <p>Пока нет загруженных видео</p>
+                    <p class="small">Выполни квест и загрузи видео!</p>
+                </div>
+            </div>
+
+            <!-- Achievements Tab -->
+            <div id="tab-achievements" class="tab-content">
+                <div id="achievements-list" class="achievements-list"></div>
+            </div>
+
+            <!-- Leaderboard Tab -->
+            <div id="tab-leaderboard" class="tab-content">
+                <div id="leaderboard-list" class="leaderboard-list"></div>
+            </div>
+        </div>
+
+        <!-- Quest Detail / Upload Screen -->
+        <div id="quest-screen" class="screen">
+            <button id="quest-back-btn" class="back-btn">← Назад</button>
+            <div class="card quest-detail-card">
+                <div id="quest-icon" class="quest-detail-icon"></div>
+                <h2 id="quest-name"></h2>
+                <p id="quest-desc" class="quest-desc"></p>
+                <div class="quest-meta">
+                    <span id="quest-points-badge" class="badge">⭐ 0 баллов</span>
+                    <span id="quest-diff-badge" class="badge"></span>
+                </div>
+                <div class="quest-requirements">
+                    <h3>Задание:</h3>
+                    <ul id="quest-requirements-list"></ul>
+                </div>
+            </div>
+
+            <div class="card upload-card">
+                <h3>📹 Загрузи видео выполнения</h3>
+                <p class="upload-hint">Сними на камеру как ты выполняешь задание</p>
+
+                <div id="upload-zone" class="upload-zone">
+                    <input type="file" id="video-input" accept="video/*" capture="environment" hidden>
+                    <span class="upload-icon">📱</span>
+                    <p>Нажми чтобы снять или выбрать видео</p>
+                    <small>MP4, MOV • до 100 МБ</small>
+                </div>
+
+                <div id="video-preview" class="video-preview" hidden>
+                    <video id="preview-video" controls></video>
+                    <button id="remove-video-btn" class="btn btn-danger btn-sm">✕ Убрать</button>
+                </div>
+
+                <textarea id="upload-comment" placeholder="Комментарий (необязательно)" rows="2"></textarea>
+
+                <button id="submit-quest-btn" class="btn btn-primary btn-lg" disabled>
+                    ✅ Отправить на проверку
+                </button>
+            </div>
+        </div>
+
+        <!-- Success Modal -->
+        <div id="success-modal" class="modal" hidden>
+            <div class="modal-content">
+                <div class="confetti">🎉</div>
+                <h2>Отличная работа!</h2>
+                <p id="success-text"></p>
+                <div id="success-points" class="success-points"></div>
+                <div id="success-achievement" class="success-achievement" hidden></div>
+                <button id="success-close-btn" class="btn btn-primary">Продолжить</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
