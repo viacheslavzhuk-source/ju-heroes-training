@@ -190,6 +190,8 @@ const USERS = [
     { id: 'mama',  name: 'Мама',  age: 41, avatar: 'mage',  emoji: '✨' },
 ];
 
+const USER_PINS = { papa: '1', mama: '2', danil: '3', lev: '4' };
+
 // ===== State =====
 const STORAGE_PREFIX = 'ju-heroes-';
 const SESSION_KEY = 'ju-heroes-current-user';
@@ -315,9 +317,56 @@ function renderUserSelect() {
 
     grid.querySelectorAll('.user-card').forEach(card => {
         card.addEventListener('click', () => {
-            loginUser(card.dataset.userId);
+            showPinModal(card.dataset.userId);
         });
     });
+}
+
+// ===== PIN Modal =====
+function showPinModal(userId) {
+    const user = USERS.find(u => u.id === userId);
+    if (!user) return;
+
+    const overlay = document.getElementById('pin-modal-overlay');
+    const modal = overlay.querySelector('.pin-modal');
+    const title = document.getElementById('pin-modal-title');
+    const input = document.getElementById('pin-input');
+    const error = document.getElementById('pin-error');
+    const submit = document.getElementById('pin-submit');
+
+    title.textContent = `Введи пароль, ${user.name}`;
+    input.value = '';
+    error.textContent = '';
+    modal.classList.remove('shake');
+    overlay.style.display = 'flex';
+
+    setTimeout(() => input.focus(), 100);
+
+    function tryLogin() {
+        if (input.value === USER_PINS[userId]) {
+            hidePinModal();
+            loginUser(userId);
+        } else {
+            error.textContent = 'Неверный пароль';
+            modal.classList.remove('shake');
+            void modal.offsetWidth;
+            modal.classList.add('shake');
+            input.value = '';
+            input.focus();
+        }
+    }
+
+    submit.onclick = tryLogin;
+    input.onkeydown = (e) => { if (e.key === 'Enter') tryLogin(); };
+    overlay.onclick = (e) => { if (e.target === overlay) hidePinModal(); };
+}
+
+function hidePinModal() {
+    const overlay = document.getElementById('pin-modal-overlay');
+    overlay.style.display = 'none';
+    const input = document.getElementById('pin-input');
+    input.value = '';
+    document.getElementById('pin-error').textContent = '';
 }
 
 // Profile button = switch user (logout)
