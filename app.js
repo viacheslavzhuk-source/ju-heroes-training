@@ -166,7 +166,10 @@ const ACHIEVEMENTS = [
     { id: 'first-quest', icon: '🌟', name: 'Первый шаг', desc: 'Выполни первый квест', condition: s => s.completedQuests >= 1 },
     { id: '5-quests', icon: '⭐', name: 'На разогреве', desc: 'Выполни 5 квестов', condition: s => s.completedQuests >= 5 },
     { id: '10-quests', icon: '🔥', name: 'Огонь!', desc: 'Выполни 10 квестов', condition: s => s.completedQuests >= 10 },
-    { id: 'all-quests', icon: '👑', name: 'Легенда', desc: 'Выполни все квесты', condition: s => s.completedQuests >= QUESTS.length },
+    { id: 'all-quests', icon: '👑', name: 'Легенда', desc: 'Выполни все квесты', condition: s => s.completedQuests >= QUESTS.length + (typeof EDU_QUESTS !== 'undefined' ? EDU_QUESTS.length : 0) },
+    { id: 'first-edu', icon: '📚', name: 'Первый урок', desc: 'Выполни первый обучающий квест', condition: s => typeof EDU_QUESTS !== 'undefined' && EDU_QUESTS.some(q => s.completed.includes(q.id)) },
+    { id: 'edu-5', icon: '🎓', name: 'Отличник', desc: 'Выполни 5 обучающих квестов', condition: s => typeof EDU_QUESTS !== 'undefined' && EDU_QUESTS.filter(q => s.completed.includes(q.id)).length >= 5 },
+    { id: 'edu-all', icon: '🏅', name: 'Мастер знаний', desc: 'Выполни все обучающие квесты', condition: s => typeof EDU_QUESTS !== 'undefined' && EDU_QUESTS.every(q => s.completed.includes(q.id)) },
     { id: '100-pts', icon: '💰', name: '100 баллов', desc: 'Набери 100 баллов', condition: s => s.points >= 100 },
     { id: '500-pts', icon: '💎', name: '500 баллов', desc: 'Набери 500 баллов', condition: s => s.points >= 500 },
     { id: '1000-pts', icon: '🏆', name: '1000 баллов', desc: 'Набери 1000 баллов', condition: s => s.points >= 1000 },
@@ -177,16 +180,24 @@ const ACHIEVEMENTS = [
     { id: 'abs-master', icon: '🔥', name: 'Железный пресс', desc: 'Все квесты на пресс', condition: s => QUESTS.filter(q => q.cat === 'abs').every(q => s.completed.includes(q.id)) },
 ];
 
-const FAKE_LEADERS = [
-    { name: 'Артём', avatar: 'hero', points: 2450, level: 8 },
-    { name: 'Маша', avatar: 'mage', points: 2100, level: 7 },
-    { name: 'Дима', avatar: 'ninja', points: 1800, level: 6 },
-    { name: 'Лиза', avatar: 'warrior', points: 1500, level: 5 },
-    { name: 'Макс', avatar: 'robot', points: 1200, level: 5 },
+// Leaderboard now built from real USERS data (see renderLeaderboard)
+
+// ===== Predefined Users =====
+const USERS = [
+    { id: 'danil', name: 'Данил', age: 15, avatar: 'ninja', emoji: '⚡' },
+    { id: 'lev',   name: 'Лев',   age: 10, avatar: 'hero',  emoji: '🦁' },
+    { id: 'papa',  name: 'Папа',  age: 41, avatar: 'warrior', emoji: '💪' },
+    { id: 'mama',  name: 'Мама',  age: 41, avatar: 'mage',  emoji: '✨' },
 ];
 
 // ===== State =====
-const STORAGE_KEY = 'ju-heroes-training';
+const STORAGE_PREFIX = 'ju-heroes-';
+const SESSION_KEY = 'ju-heroes-current-user';
+let currentUserId = null;
+
+function storageKeyFor(userId) {
+    return STORAGE_PREFIX + userId;
+}
 
 function defaultState() {
     return {
@@ -201,31 +212,59 @@ function defaultState() {
         lastTrainDate: null,
         history: [],
         unlockedAchievements: [],
+        notifications: { enabled: false, lastReminder: null },
     };
 }
 
-let state = loadState();
+let state = defaultState();
 
 function loadState() {
+    if (!currentUserId) return defaultState();
     try {
-        const raw = localStorage.getItem(STORAGE_KEY);
+        const raw = localStorage.getItem(storageKeyFor(currentUserId));
         if (raw) return { ...defaultState(), ...JSON.parse(raw) };
     } catch (e) {}
     return defaultState();
 }
 
 function saveState() {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    if (!currentUserId) return;
+    localStorage.setItem(storageKeyFor(currentUserId), JSON.stringify(state));
+}
+
+function loginUser(userId) {
+    const user = USERS.find(u => u.id === userId);
+    if (!user) return;
+
+    currentUserId = userId;
+    localStorage.setItem(SESSION_KEY, userId);
+    state = loadState();
+
+    // Always keep profile in sync with predefined user data
+    state.profile = { name: user.name, age: user.age, avatar: user.avatar };
+    saveState();
+
+    showScreen('dashboard-screen');
+    updateDashboard();
+}
+
+function logoutUser() {
+    currentUserId = null;
+    localStorage.removeItem(SESSION_KEY);
+    state = defaultState();
+    showScreen('profile-screen');
 }
 
 // ===== Init =====
 function init() {
-    if (state.profile) {
-        showScreen('dashboard-screen');
-        updateDashboard();
+    // Check if someone was logged in
+    const savedUser = localStorage.getItem(SESSION_KEY);
+    if (savedUser && USERS.find(u => u.id === savedUser)) {
+        loginUser(savedUser);
     } else {
         showScreen('profile-screen');
     }
+    renderUserSelect();
 }
 
 function showScreen(id) {
@@ -241,55 +280,50 @@ function updateNav() {
     document.getElementById('nav-level').textContent = 'Ур. ' + state.level;
 }
 
-// ===== Profile =====
-let selectedAvatar = null;
+// ===== User Selection Screen =====
+function renderUserSelect() {
+    const grid = document.getElementById('user-select-grid');
+    if (!grid) return;
 
-document.querySelectorAll('.avatar-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-        document.querySelectorAll('.avatar-btn').forEach(b => b.classList.remove('selected'));
-        btn.classList.add('selected');
-        selectedAvatar = btn.dataset.avatar;
-        checkProfileReady();
+    grid.innerHTML = USERS.map(user => {
+        // Load user's saved progress to show stats on the card
+        let saved = null;
+        try {
+            const raw = localStorage.getItem(storageKeyFor(user.id));
+            if (raw) saved = JSON.parse(raw);
+        } catch (e) {}
+
+        const level = saved ? saved.level || 1 : 1;
+        const pts = saved ? saved.points || 0 : 0;
+        const quests = saved ? saved.completedQuests || 0 : 0;
+        const avatarSvg = AVATAR_SVGS[user.avatar] || '';
+
+        return `
+            <button class="user-card glass" data-user-id="${user.id}">
+                <div class="user-card-avatar">${avatarSvg}</div>
+                <div class="user-card-emoji">${user.emoji}</div>
+                <h3 class="user-card-name">${user.name}</h3>
+                <span class="user-card-age">${user.age} лет</span>
+                <div class="user-card-stats">
+                    <span class="user-card-stat">Ур. ${level}</span>
+                    <span class="user-card-stat">⭐ ${pts}</span>
+                    <span class="user-card-stat">✅ ${quests}</span>
+                </div>
+            </button>
+        `;
+    }).join('');
+
+    grid.querySelectorAll('.user-card').forEach(card => {
+        card.addEventListener('click', () => {
+            loginUser(card.dataset.userId);
+        });
     });
-});
-
-document.getElementById('profile-name').addEventListener('input', checkProfileReady);
-document.getElementById('profile-age').addEventListener('input', checkProfileReady);
-
-function checkProfileReady() {
-    const name = document.getElementById('profile-name').value.trim();
-    const age = document.getElementById('profile-age').value;
-    const ready = selectedAvatar && name && age;
-    const btn = document.getElementById('profile-save-btn');
-    btn.disabled = !ready;
-
-    let hint = '';
-    if (!selectedAvatar) hint = 'Выбери аватар';
-    else if (!name) hint = 'Введи имя героя';
-    else if (!age) hint = 'Введи возраст';
-
-    btn.textContent = ready ? 'Начать тренировки!' : (hint || 'Начать тренировки!');
 }
 
-document.getElementById('profile-save-btn').addEventListener('click', () => {
-    const btn = document.getElementById('profile-save-btn');
-    if (btn.disabled) return;
-
-    state.profile = {
-        name: document.getElementById('profile-name').value.trim(),
-        age: parseInt(document.getElementById('profile-age').value),
-        avatar: selectedAvatar,
-    };
-    saveState();
-    showScreen('dashboard-screen');
-    updateDashboard();
-});
-
+// Profile button = switch user (logout)
 document.getElementById('nav-profile-btn').addEventListener('click', () => {
-    if (confirm('Сбросить профиль?')) {
-        localStorage.removeItem(STORAGE_KEY);
-        location.reload();
-    }
+    logoutUser();
+    renderUserSelect();
 });
 
 // ===== Dashboard =====
@@ -336,19 +370,32 @@ document.querySelectorAll('.cat-btn').forEach(btn => {
 });
 
 // ===== Render Quests =====
+function getAllQuests() {
+    return [...QUESTS, ...(typeof EDU_QUESTS !== 'undefined' ? EDU_QUESTS : [])];
+}
+
 function renderQuests(cat) {
     const list = document.getElementById('quest-list');
-    const filtered = cat === 'all' ? QUESTS : QUESTS.filter(q => q.cat === cat);
+    const allQuests = getAllQuests();
+    const filtered = cat === 'all' ? allQuests : allQuests.filter(q => q.cat === cat);
+
+    if (filtered.length === 0) {
+        list.innerHTML = '<div class="empty-state"><p>Нет квестов в этой категории</p></div>';
+        return;
+    }
 
     list.innerHTML = filtered.map((q, i) => {
         const done = state.completed.includes(q.id);
         const iconSvg = window.QUEST_ICONS && window.QUEST_ICONS[q.id] ? window.QUEST_ICONS[q.id] : q.icon;
+        const isEdu = q.cat === 'learn';
+        const typeBadge = isEdu ? `<span class="quest-type-badge type-${q.type}">${{flashcard:'🃏 Карточки', quiz:'📝 Тест', infographic:'📊 Схема', audio:'🎧 Аудио'}[q.type] || q.type}</span>` : '';
         return `
-            <div class="quest-item ${done ? 'completed' : ''}" data-quest-id="${q.id}" style="animation-delay: ${i * 40}ms">
-                <div class="quest-item-icon">${iconSvg}</div>
+            <div class="quest-item ${done ? 'completed' : ''} ${isEdu ? 'edu-quest' : ''}" data-quest-id="${q.id}" data-is-edu="${isEdu}" style="animation-delay: ${i * 40}ms">
+                <div class="quest-item-icon ${isEdu ? 'edu-icon' : ''}">${iconSvg}</div>
                 <div class="quest-item-info">
                     <h3>${q.name}</h3>
                     <p>${q.desc}</p>
+                    ${typeBadge}
                 </div>
                 ${done
                     ? '<span class="check-mark">&#10003;</span>'
@@ -362,7 +409,14 @@ function renderQuests(cat) {
     }).join('');
 
     list.querySelectorAll('.quest-item').forEach(item => {
-        item.addEventListener('click', () => openQuest(item.dataset.questId));
+        item.addEventListener('click', () => {
+            const isEdu = item.dataset.isEdu === 'true';
+            if (isEdu && typeof openEduQuest === 'function') {
+                openEduQuest(item.dataset.questId);
+            } else {
+                openQuest(item.dataset.questId);
+            }
+        });
     });
 }
 
@@ -465,6 +519,8 @@ document.getElementById('submit-quest-btn').addEventListener('click', () => {
         status: 'approved',
     });
 
+    const prevLevel = state.level;
+
     state.completed.push(quest.id);
     state.completedQuests++;
     state.points += quest.points;
@@ -497,6 +553,13 @@ document.getElementById('submit-quest-btn').addEventListener('click', () => {
 
     saveState();
 
+    // Push notifications
+    JUNotifications.notifyQuestComplete(quest.name, quest.points);
+    if (state.level > prevLevel) {
+        setTimeout(() => JUNotifications.notifyLevelUp(state.level), 1500);
+    }
+    JUNotifications.notifyStreak(state.streak);
+
     document.getElementById('success-text').textContent = `Квест "${quest.name}" выполнен!`;
     document.getElementById('success-points').textContent = `+${quest.points}`;
 
@@ -504,6 +567,7 @@ document.getElementById('submit-quest-btn').addEventListener('click', () => {
     if (newAchievement) {
         achEl.hidden = false;
         achEl.textContent = `Новое достижение: ${newAchievement.icon} ${newAchievement.name}`;
+        JUNotifications.notifyAchievement(newAchievement.name, newAchievement.icon);
     } else {
         achEl.hidden = true;
     }
@@ -568,16 +632,24 @@ function renderAchievements() {
 // ===== Render Leaderboard =====
 function renderLeaderboard() {
     const list = document.getElementById('leaderboard-list');
-    const me = state.profile ? {
-        name: state.profile.name,
-        avatar: state.profile.avatar,
-        points: state.points,
-        level: state.level,
-        isMe: true,
-    } : null;
 
-    let leaders = [...FAKE_LEADERS];
-    if (me) leaders.push(me);
+    // Build leaderboard from all real users
+    let leaders = USERS.map(user => {
+        let saved = null;
+        try {
+            const raw = localStorage.getItem(storageKeyFor(user.id));
+            if (raw) saved = JSON.parse(raw);
+        } catch (e) {}
+
+        return {
+            name: user.name,
+            avatar: user.avatar,
+            points: saved ? saved.points || 0 : 0,
+            level: saved ? saved.level || 1 : 1,
+            isMe: user.id === currentUserId,
+        };
+    });
+
     leaders.sort((a, b) => b.points - a.points);
 
     list.innerHTML = leaders.map((l, i) => {
@@ -625,5 +697,313 @@ uploadZone.addEventListener('drop', (e) => {
     }
 });
 
+// ===== Push Notifications Module =====
+const JUNotifications = {
+    swRegistration: null,
+    reminderInterval: null,
+
+    // Motivational messages for reminders
+    REMINDER_MESSAGES: [
+        { title: 'Пора тренироваться! 💪', body: 'Герой, не пропусти свою тренировку сегодня!' },
+        { title: 'Твоя серия ждёт! 🔥', body: 'Не потеряй свою серию тренировок — сделай квест!' },
+        { title: 'Новый день — новый квест! ⚡', body: 'Какой квест ты покоришь сегодня?' },
+        { title: 'Герои не отдыхают! 🦸', body: 'Время показать свою силу!' },
+        { title: 'Тренировка зовёт! 🏆', body: 'Заработай баллы и поднимись в рейтинге!' },
+    ],
+
+    async init() {
+        if (!('serviceWorker' in navigator) || !('Notification' in window)) {
+            console.log('Push notifications not supported');
+            return;
+        }
+
+        try {
+            this.swRegistration = await navigator.serviceWorker.register('./sw.js');
+            console.log('Service Worker registered');
+        } catch (err) {
+            console.error('SW registration failed:', err);
+        }
+
+        this.updateUI();
+        this.checkMissedReminder();
+    },
+
+    async requestPermission() {
+        if (!('Notification' in window)) return false;
+
+        let permission = Notification.permission;
+        if (permission === 'default') {
+            permission = await Notification.requestPermission();
+        }
+
+        if (permission === 'granted') {
+            state.notifications = state.notifications || {};
+            state.notifications.enabled = true;
+            saveState();
+            this.scheduleReminder();
+            this.updateUI();
+            // Show confirmation
+            this.showNotification('Уведомления включены! 🎉', 'Теперь ты не пропустишь тренировку!', 'setup');
+            return true;
+        }
+        return false;
+    },
+
+    disable() {
+        state.notifications = state.notifications || {};
+        state.notifications.enabled = false;
+        saveState();
+        if (this.reminderInterval) {
+            clearInterval(this.reminderInterval);
+            this.reminderInterval = null;
+        }
+        this.updateUI();
+    },
+
+    isEnabled() {
+        return state.notifications && state.notifications.enabled && Notification.permission === 'granted';
+    },
+
+    async showNotification(title, body, tag = 'general') {
+        if (Notification.permission !== 'granted') return;
+
+        if (this.swRegistration) {
+            this.swRegistration.active?.postMessage({
+                type: 'SHOW_NOTIFICATION',
+                title, body, tag,
+            });
+        } else {
+            // Fallback to Notification API
+            new Notification(title, { body, tag });
+        }
+    },
+
+    // Notify on quest completion
+    notifyQuestComplete(questName, points) {
+        if (!this.isEnabled()) return;
+        this.showNotification(
+            `Квест выполнен! ✅`,
+            `"${questName}" — +${points} баллов!`,
+            'quest-complete'
+        );
+    },
+
+    // Notify on achievement unlock
+    notifyAchievement(achievementName, achievementIcon) {
+        if (!this.isEnabled()) return;
+        this.showNotification(
+            `Новое достижение! ${achievementIcon}`,
+            achievementName,
+            'achievement'
+        );
+    },
+
+    // Notify on level up
+    notifyLevelUp(newLevel) {
+        if (!this.isEnabled()) return;
+        this.showNotification(
+            `Уровень ${newLevel}! 🎉`,
+            'Ты стал ещё сильнее! Продолжай тренировки!',
+            'level-up'
+        );
+    },
+
+    // Notify on streak milestone
+    notifyStreak(streak) {
+        if (!this.isEnabled()) return;
+        if ([3, 5, 7, 14, 30].includes(streak)) {
+            this.showNotification(
+                `${streak} дней подряд! 🔥`,
+                'Невероятная серия! Так держать, герой!',
+                'streak'
+            );
+        }
+    },
+
+    // Schedule daily reminder while page is open
+    scheduleReminder() {
+        if (!this.isEnabled()) return;
+        if (this.reminderInterval) clearInterval(this.reminderInterval);
+
+        // Check every 30 minutes if reminder is needed
+        this.reminderInterval = setInterval(() => {
+            this.checkAndRemind();
+        }, 30 * 60 * 1000);
+
+        // Also schedule via SW for background
+        if (this.swRegistration && this.swRegistration.active) {
+            const msg = this.getRandomReminder();
+            this.swRegistration.active.postMessage({
+                type: 'SCHEDULE_REMINDER',
+                title: msg.title,
+                body: msg.body,
+                tag: 'daily-reminder',
+                delay: 4 * 60 * 60 * 1000, // 4 hours from now
+            });
+        }
+    },
+
+    checkAndRemind() {
+        if (!this.isEnabled()) return;
+        const today = new Date().toDateString();
+        if (state.lastTrainDate === today) return; // Already trained today
+
+        const now = new Date();
+        const hour = now.getHours();
+        // Remind between 10:00 and 20:00
+        if (hour >= 10 && hour <= 20) {
+            const lastReminder = state.notifications?.lastReminder;
+            if (lastReminder === today) return; // Already reminded today
+
+            state.notifications = state.notifications || {};
+            state.notifications.lastReminder = today;
+            saveState();
+
+            const msg = this.getRandomReminder();
+            this.showNotification(msg.title, msg.body, 'daily-reminder');
+        }
+    },
+
+    // Check on page load if we missed a reminder
+    checkMissedReminder() {
+        if (!this.isEnabled()) return;
+
+        const today = new Date().toDateString();
+        if (state.lastTrainDate === today) return; // Already trained today
+
+        const lastReminder = state.notifications?.lastReminder;
+        if (lastReminder === today) return; // Already reminded today
+
+        // Show a gentle in-app banner instead
+        setTimeout(() => {
+            this.showInAppReminder();
+        }, 2000);
+    },
+
+    showInAppReminder() {
+        if (document.getElementById('notification-banner')) return;
+
+        const banner = document.createElement('div');
+        banner.id = 'notification-banner';
+        banner.className = 'notification-banner glass';
+        banner.innerHTML = `
+            <div class="notif-banner-icon">⚡</div>
+            <div class="notif-banner-text">
+                <strong>Время тренироваться!</strong>
+                <span>Не потеряй свою серию — выполни квест сегодня!</span>
+            </div>
+            <button class="notif-banner-close" id="notif-banner-close">✕</button>
+        `;
+        document.getElementById('app').prepend(banner);
+
+        requestAnimationFrame(() => banner.classList.add('show'));
+
+        document.getElementById('notif-banner-close').addEventListener('click', () => {
+            banner.classList.remove('show');
+            setTimeout(() => banner.remove(), 300);
+        });
+
+        // Auto-hide after 8 seconds
+        setTimeout(() => {
+            if (banner.parentNode) {
+                banner.classList.remove('show');
+                setTimeout(() => banner.remove(), 300);
+            }
+        }, 8000);
+    },
+
+    getRandomReminder() {
+        return this.REMINDER_MESSAGES[Math.floor(Math.random() * this.REMINDER_MESSAGES.length)];
+    },
+
+    updateUI() {
+        const toggleBtn = document.getElementById('notif-toggle-btn');
+        const statusEl = document.getElementById('notif-status');
+        if (!toggleBtn || !statusEl) return;
+
+        if (!('Notification' in window) || !('serviceWorker' in navigator)) {
+            toggleBtn.textContent = 'Не поддерживается';
+            toggleBtn.disabled = true;
+            statusEl.textContent = 'Браузер не поддерживает уведомления';
+            return;
+        }
+
+        const dot = document.getElementById('notif-dot');
+
+        if (this.isEnabled()) {
+            toggleBtn.textContent = 'Выключить';
+            toggleBtn.className = 'btn btn-sm btn-danger';
+            statusEl.textContent = 'Уведомления включены';
+            statusEl.className = 'notif-status active';
+            if (dot) dot.hidden = true;
+        } else {
+            toggleBtn.textContent = 'Включить';
+            toggleBtn.className = 'btn btn-sm btn-glow';
+            statusEl.textContent = Notification.permission === 'denied'
+                ? 'Заблокированы в браузере'
+                : 'Уведомления выключены';
+            statusEl.className = 'notif-status';
+            if (dot) dot.hidden = false;
+        }
+    },
+};
+
+// Wire up notification toggle button
+document.addEventListener('DOMContentLoaded', () => {
+    const toggleBtn = document.getElementById('notif-toggle-btn');
+    if (toggleBtn) {
+        toggleBtn.addEventListener('click', () => {
+            if (JUNotifications.isEnabled()) {
+                JUNotifications.disable();
+            } else {
+                JUNotifications.requestPermission();
+            }
+        });
+    }
+});
+
+// ===== Notification Panel Toggle =====
+const notifBtn = document.getElementById('nav-notif-btn');
+const notifPanel = document.getElementById('notif-panel');
+const notifPanelClose = document.getElementById('notif-panel-close');
+
+if (notifBtn && notifPanel) {
+    notifBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const isVisible = notifPanel.classList.contains('show');
+        if (isVisible) {
+            notifPanel.classList.remove('show');
+            setTimeout(() => notifPanel.hidden = true, 250);
+        } else {
+            notifPanel.hidden = false;
+            requestAnimationFrame(() => notifPanel.classList.add('show'));
+        }
+    });
+
+    if (notifPanelClose) {
+        notifPanelClose.addEventListener('click', () => {
+            notifPanel.classList.remove('show');
+            setTimeout(() => notifPanel.hidden = true, 250);
+        });
+    }
+
+    // Close on outside click
+    document.addEventListener('click', (e) => {
+        if (notifPanel.classList.contains('show') && !notifPanel.contains(e.target) && e.target !== notifBtn) {
+            notifPanel.classList.remove('show');
+            setTimeout(() => notifPanel.hidden = true, 250);
+        }
+    });
+}
+
+// Update bell dot indicator
+function updateNotifDot() {
+    const dot = document.getElementById('notif-dot');
+    if (!dot) return;
+    dot.hidden = JUNotifications.isEnabled();
+}
+
 // ===== Start =====
 init();
+JUNotifications.init();
+updateNotifDot();
