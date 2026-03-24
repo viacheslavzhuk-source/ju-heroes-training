@@ -630,7 +630,7 @@ function openEduQuest(questId) {
     const screen = document.getElementById('edu-screen');
     document.getElementById('edu-back-btn').onclick = () => {
         stopAudio();
-        destroyVimeoPlayer();
+        destroyYTPlayer();
         showScreen('dashboard-screen');
         updateDashboard();
     };
@@ -1054,12 +1054,13 @@ function jumpToSection(index) {
     if (diff !== 0) audioNavSection(diff);
 }
 
-// ===== Video Renderer (Vimeo) =====
-let vimeoPlayer = null;
+// ===== Video Renderer (YouTube) =====
+let ytPlayer = null;
+let ytProgressInterval = null;
 
 function renderVideo(quest, container) {
-    const vimeoId = quest.content.vimeoId;
-    const isPlaceholder = !vimeoId || vimeoId.startsWith('YOUR_VIMEO_ID');
+    const youtubeId = quest.content.youtubeId;
+    const isPlaceholder = !youtubeId || youtubeId.startsWith('YOUR_YOUTUBE_ID');
 
     container.innerHTML = `
         <div class="video-container">
@@ -1067,16 +1068,16 @@ function renderVideo(quest, container) {
                 <span class="video-module-num">Модуль ${quest.content.moduleNum}</span>
                 <h3>${quest.content.title}</h3>
             </div>
-            <div class="video-player-wrapper" id="vimeo-player-wrapper">
+            <div class="video-player-wrapper" id="yt-player-wrapper">
                 ${isPlaceholder ? `
                     <div class="video-placeholder">
                         <svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.4">
                             <polygon points="5 3 19 12 5 21 5 3"/>
                         </svg>
                         <p>Видео скоро будет доступно</p>
-                        <small>Vimeo ID не задан для модуля ${quest.content.moduleNum}</small>
+                        <small>YouTube ID не задан для модуля ${quest.content.moduleNum}</small>
                     </div>
-                ` : `<div id="vimeo-player" data-vimeo-id="${vimeoId}"></div>`}
+                ` : `<div id="yt-player"></div>`}
             </div>
             ${!isPlaceholder ? `
                 <div class="video-progress-bar">
@@ -1098,52 +1099,70 @@ function renderVideo(quest, container) {
     completeBtn.disabled = true;
 
     try {
-        vimeoPlayer = new Vimeo.Player('vimeo-player', {
-            id: vimeoId,
-            responsive: true,
-            color: '6c5ce7',
-            dnt: true,
-        });
+        ytPlayer = new YT.Player('yt-player', {
+            videoId: youtubeId,
+            playerVars: {
+                rel: 0,
+                modestbranding: 1,
+                color: 'white',
+                hl: 'ru',
+            },
+            events: {
+                onReady: () => {
+                    ytProgressInterval = setInterval(() => {
+                        if (!ytPlayer || !ytPlayer.getCurrentTime || !ytPlayer.getDuration) return;
+                        const duration = ytPlayer.getDuration();
+                        if (duration <= 0) return;
 
-        vimeoPlayer.on('timeupdate', (data) => {
-            const pct = data.percent * 100;
-            const fill = document.getElementById('video-progress-fill');
-            if (fill) fill.style.width = pct + '%';
+                        const pct = ytPlayer.getCurrentTime() / duration;
+                        const fill = document.getElementById('video-progress-fill');
+                        if (fill) fill.style.width = (pct * 100) + '%';
 
-            if (data.percent >= 0.8 && completeBtn.disabled) {
-                completeBtn.disabled = false;
-                const hint = document.getElementById('video-watch-hint');
-                if (hint) hint.hidden = true;
-                const notice = document.getElementById('video-complete-notice');
-                if (notice) notice.hidden = false;
-            }
-        });
-
-        vimeoPlayer.on('error', () => {
-            const wrapper = document.getElementById('vimeo-player-wrapper');
-            if (wrapper) {
-                wrapper.innerHTML = `
-                    <div class="video-placeholder">
-                        <svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="#e17055" stroke-width="1.5">
-                            <circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/>
-                        </svg>
-                        <p>Ошибка загрузки видео</p>
-                        <small>Проверь подключение к интернету</small>
-                    </div>
-                `;
-            }
-            completeBtn.disabled = false;
+                        if (pct >= 0.8 && completeBtn.disabled) {
+                            completeBtn.disabled = false;
+                            const hint = document.getElementById('video-watch-hint');
+                            if (hint) hint.hidden = true;
+                            const notice = document.getElementById('video-complete-notice');
+                            if (notice) notice.hidden = false;
+                        }
+                    }, 1000);
+                },
+                onError: () => {
+                    const wrapper = document.getElementById('yt-player-wrapper');
+                    if (wrapper) {
+                        wrapper.innerHTML = `
+                            <div class="video-placeholder">
+                                <svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="#e17055" stroke-width="1.5">
+                                    <circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/>
+                                </svg>
+                                <p>Ошибка загрузки видео</p>
+                                <small>Проверь подключение к интернету</small>
+                            </div>
+                        `;
+                    }
+                    completeBtn.disabled = false;
+                },
+            },
         });
     } catch (e) {
         completeBtn.disabled = false;
     }
 }
 
-function destroyVimeoPlayer() {
-    if (vimeoPlayer) {
-        vimeoPlayer.destroy().catch(() => {});
-        vimeoPlayer = null;
+function destroyYTPlayer() {
+    if (ytProgressInterval) {
+        clearInterval(ytProgressInterval);
+        ytProgressInterval = null;
     }
+    if (ytPlayer) {
+        try { ytPlayer.destroy(); } catch (e) {}
+        ytPlayer = null;
+    }
+}
+
+// YouTube IFrame API callback
+function onYouTubeIframeAPIReady() {
+    // API loaded — players created on demand in renderVideo()
 }
 
 function stopAudio() {

@@ -1,5 +1,5 @@
 // ===== JU Heroes Training — Service Worker =====
-const CACHE_NAME = 'ju-heroes-v3';
+const CACHE_NAME = 'ju-heroes-v4';
 const ASSETS = [
     './',
     './index.html',
@@ -7,7 +7,7 @@ const ASSETS = [
     './app.js',
     './icons.js',
     './education.js',
-    './vimeo_config.js',
+    './youtube_config.js',
     './audio/ai-1-audio-s1.mp3',
     './audio/ai-1-audio-s2.mp3',
     './audio/ai-1-audio-s3.mp3',
