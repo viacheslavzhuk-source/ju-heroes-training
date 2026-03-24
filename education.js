@@ -825,9 +825,12 @@ function renderInfographic(quest, container) {
     document.getElementById('edu-complete-btn').disabled = false;
 }
 
-// ===== Audio Renderer =====
-let speechSynth = window.speechSynthesis;
-let currentUtterance = null;
+// ===== Audio Renderer (ElevenLabs MP3) =====
+let currentAudio = null;
+
+function getAudioUrl(questId, sectionIndex) {
+    return `audio/${questId}-s${sectionIndex + 1}.mp3`;
+}
 
 function renderAudio(quest, container) {
     const sections = quest.content.sections;
@@ -874,41 +877,45 @@ function toggleAudio() {
     const quest = EDU_QUESTS.find(q => q.id === currentQuestId);
     if (!quest) return;
 
-    if (speechSynth.speaking) {
-        speechSynth.cancel();
+    if (currentAudio && !currentAudio.paused) {
+        currentAudio.pause();
         setAudioPlaying(false);
         return;
     }
 
-    const section = quest.content.sections[eduState.audioSection];
-    speakText(section.text, section.title);
+    if (currentAudio && currentAudio.paused && currentAudio.currentTime > 0) {
+        currentAudio.play();
+        setAudioPlaying(true);
+        return;
+    }
+
+    playSection(quest);
 }
 
-function speakText(text, title) {
-    speechSynth.cancel();
+function playSection(quest) {
+    stopAudio();
 
-    currentUtterance = new SpeechSynthesisUtterance(text);
-    currentUtterance.lang = 'ru-RU';
-    currentUtterance.rate = 0.9;
-    currentUtterance.pitch = 1.0;
+    const url = getAudioUrl(quest.id, eduState.audioSection);
+    currentAudio = new Audio(url);
 
-    // Try to find a Russian voice
-    const voices = speechSynth.getVoices();
-    const ruVoice = voices.find(v => v.lang.startsWith('ru'));
-    if (ruVoice) currentUtterance.voice = ruVoice;
-
-    currentUtterance.onstart = () => setAudioPlaying(true);
-    currentUtterance.onend = () => {
+    currentAudio.onplay = () => setAudioPlaying(true);
+    currentAudio.onpause = () => {
+        if (currentAudio && currentAudio.ended) return;
         setAudioPlaying(false);
-        // Auto-play next section
-        const quest = EDU_QUESTS.find(q => q.id === currentQuestId);
-        if (quest && eduState.audioSection < quest.content.sections.length - 1) {
+    };
+    currentAudio.onended = () => {
+        setAudioPlaying(false);
+        if (eduState.audioSection < quest.content.sections.length - 1) {
             audioNavSection(1);
-            setTimeout(() => toggleAudio(), 500);
+            setTimeout(() => playSection(quest), 500);
         }
     };
+    currentAudio.onerror = () => {
+        setAudioPlaying(false);
+        document.getElementById('audio-status').textContent = 'Ошибка загрузки аудио';
+    };
 
-    speechSynth.speak(currentUtterance);
+    currentAudio.play();
 }
 
 function setAudioPlaying(playing) {
@@ -936,11 +943,9 @@ function audioNavSection(dir) {
     const newIndex = eduState.audioSection + dir;
     if (newIndex < 0 || newIndex >= sections.length) return;
 
-    speechSynth.cancel();
-    setAudioPlaying(false);
+    stopAudio();
     eduState.audioSection = newIndex;
 
-    // Update UI
     document.querySelectorAll('.audio-section-item').forEach((el, i) => {
         el.classList.toggle('active', i === newIndex);
     });
@@ -957,10 +962,12 @@ function jumpToSection(index) {
 }
 
 function stopAudio() {
-    if (speechSynth.speaking) {
-        speechSynth.cancel();
-        setAudioPlaying(false);
+    if (currentAudio) {
+        currentAudio.pause();
+        currentAudio.currentTime = 0;
+        currentAudio = null;
     }
+    setAudioPlaying(false);
 }
 
 // ===== Complete Education Quest =====
@@ -1029,5 +1036,3 @@ function completeEduQuest(questId) {
     document.getElementById('success-modal').hidden = false;
 }
 
-// Load voices (needed for some browsers)
-speechSynthesis.onvoiceschanged = () => {};
