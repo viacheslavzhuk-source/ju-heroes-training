@@ -342,9 +342,10 @@ function renderQuests(cat) {
 
     list.innerHTML = filtered.map((q, i) => {
         const done = state.completed.includes(q.id);
+        const iconSvg = window.QUEST_ICONS && window.QUEST_ICONS[q.id] ? window.QUEST_ICONS[q.id] : q.icon;
         return `
             <div class="quest-item ${done ? 'completed' : ''}" data-quest-id="${q.id}" style="animation-delay: ${i * 40}ms">
-                <div class="quest-item-icon">${q.icon}</div>
+                <div class="quest-item-icon">${iconSvg}</div>
                 <div class="quest-item-info">
                     <h3>${q.name}</h3>
                     <p>${q.desc}</p>
@@ -376,7 +377,8 @@ function openQuest(questId) {
     currentQuestId = questId;
     selectedFile = null;
 
-    document.getElementById('quest-icon').textContent = quest.icon;
+    const detailIcon = window.QUEST_ICONS && window.QUEST_ICONS[quest.id] ? window.QUEST_ICONS[quest.id] : quest.icon;
+    document.getElementById('quest-icon').innerHTML = detailIcon;
     document.getElementById('quest-name').textContent = quest.name;
     document.getElementById('quest-desc').textContent = quest.desc;
     document.getElementById('quest-points-badge').textContent = quest.points + ' баллов';
@@ -552,9 +554,10 @@ function renderAchievements() {
     const list = document.getElementById('achievements-list');
     list.innerHTML = ACHIEVEMENTS.map(ach => {
         const unlocked = state.unlockedAchievements.includes(ach.id);
+        const achIcon = window.QUEST_ICONS && window.QUEST_ICONS[ach.id] ? window.QUEST_ICONS[ach.id] : ach.icon;
         return `
             <div class="achievement-item ${unlocked ? 'unlocked' : 'locked'}">
-                <div class="achievement-icon">${ach.icon}</div>
+                <div class="achievement-icon">${achIcon}</div>
                 <h4>${ach.name}</h4>
                 <p>${unlocked ? ach.desc : '???'}</p>
             </div>
