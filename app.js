@@ -1,5 +1,61 @@
 // ===== JU Heroes Training — App =====
 
+// ===== Particle System =====
+(function initParticles() {
+    const canvas = document.getElementById('particles-canvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+    const colors = ['#6c5ce7', '#00cec9', '#fdcb6e', '#a29bfe', '#81ecec'];
+
+    function resize() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    }
+    resize();
+    window.addEventListener('resize', resize);
+
+    for (let i = 0; i < 40; i++) {
+        particles.push({
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            r: Math.random() * 2 + 0.5,
+            dx: (Math.random() - 0.5) * 0.3,
+            dy: (Math.random() - 0.5) * 0.3,
+            color: colors[Math.floor(Math.random() * colors.length)],
+            alpha: Math.random() * 0.4 + 0.1,
+        });
+    }
+
+    function animate() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        particles.forEach(p => {
+            p.x += p.dx;
+            p.y += p.dy;
+            if (p.x < 0 || p.x > canvas.width) p.dx *= -1;
+            if (p.y < 0 || p.y > canvas.height) p.dy *= -1;
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+            ctx.fillStyle = p.color;
+            ctx.globalAlpha = p.alpha;
+            ctx.fill();
+        });
+        ctx.globalAlpha = 1;
+        requestAnimationFrame(animate);
+    }
+    animate();
+})();
+
+// ===== Avatar SVGs =====
+const AVATAR_SVGS = {
+    knight: '<svg viewBox="0 0 48 48" width="48" height="48"><rect x="14" y="8" width="20" height="6" rx="2" fill="#a29bfe"/><rect x="16" y="14" width="16" height="14" rx="3" fill="#6c5ce7"/><rect x="18" y="28" width="12" height="10" rx="2" fill="#a29bfe"/><circle cx="21" cy="20" r="2" fill="#fff"/><circle cx="27" cy="20" r="2" fill="#fff"/><rect x="10" y="16" width="4" height="10" rx="2" fill="#6c5ce7"/><rect x="34" y="16" width="4" height="10" rx="2" fill="#6c5ce7"/></svg>',
+    mage: '<svg viewBox="0 0 48 48" width="48" height="48"><polygon points="24,4 32,16 16,16" fill="#e17055"/><rect x="16" y="16" width="16" height="14" rx="3" fill="#d63031"/><rect x="18" y="30" width="12" height="10" rx="2" fill="#e17055"/><circle cx="21" cy="22" r="2" fill="#ffeaa7"/><circle cx="27" cy="22" r="2" fill="#ffeaa7"/><circle cx="24" cy="8" r="2" fill="#ffeaa7"/></svg>',
+    ninja: '<svg viewBox="0 0 48 48" width="48" height="48"><rect x="16" y="12" width="16" height="16" rx="4" fill="#2d3436"/><rect x="14" y="18" width="20" height="6" rx="2" fill="#636e72"/><circle cx="20" cy="21" r="2" fill="#00cec9"/><circle cx="28" cy="21" r="2" fill="#00cec9"/><rect x="18" y="28" width="12" height="12" rx="2" fill="#2d3436"/><rect x="8" y="18" width="6" height="3" rx="1" fill="#636e72"/><rect x="34" y="18" width="6" height="3" rx="1" fill="#636e72"/></svg>',
+    hero: '<svg viewBox="0 0 48 48" width="48" height="48"><rect x="16" y="10" width="16" height="16" rx="4" fill="#0984e3"/><rect x="14" y="16" width="20" height="6" rx="2" fill="#74b9ff"/><circle cx="20" cy="19" r="2" fill="#fff"/><circle cx="28" cy="19" r="2" fill="#fff"/><rect x="18" y="26" width="12" height="14" rx="2" fill="#0984e3"/><path d="M14 28l-4 6h6z" fill="#e17055"/><path d="M34 28l4 6h-6z" fill="#e17055"/></svg>',
+    warrior: '<svg viewBox="0 0 48 48" width="48" height="48"><rect x="16" y="8" width="16" height="18" rx="4" fill="#fdcb6e"/><rect x="14" y="14" width="20" height="6" rx="2" fill="#f9ca24"/><circle cx="20" cy="17" r="2" fill="#2d3436"/><circle cx="28" cy="17" r="2" fill="#2d3436"/><rect x="18" y="26" width="12" height="14" rx="2" fill="#e17055"/><rect x="10" y="10" width="4" height="14" rx="2" fill="#fdcb6e"/><rect x="34" y="10" width="4" height="14" rx="2" fill="#fdcb6e"/></svg>',
+    robot: '<svg viewBox="0 0 48 48" width="48" height="48"><rect x="14" y="6" width="20" height="4" rx="2" fill="#00cec9"/><rect x="16" y="10" width="16" height="16" rx="3" fill="#dfe6e9"/><rect x="18" y="26" width="12" height="12" rx="2" fill="#b2bec3"/><rect x="19" y="14" width="4" height="4" rx="1" fill="#00cec9"/><rect x="25" y="14" width="4" height="4" rx="1" fill="#00cec9"/><rect x="21" y="20" width="6" height="2" rx="1" fill="#636e72"/><rect x="10" y="14" width="4" height="8" rx="2" fill="#b2bec3"/><rect x="34" y="14" width="4" height="8" rx="2" fill="#b2bec3"/></svg>',
+};
+
 // ===== Quest Data =====
 const QUESTS = [
     // Pull-ups
@@ -56,7 +112,7 @@ const QUESTS = [
         requirements: ['50 отжиманий подряд', 'Можно 2 паузы по 3 сек', 'Видео от начала до конца'],
     },
 
-    // Bars (брусья)
+    // Bars
     {
         id: 'bars-3', cat: 'bars', icon: '🤸', name: '3 раза на брусьях',
         desc: 'Отжимания на брусьях — 3 повторения', points: 80, diff: 'Средне',
@@ -78,7 +134,7 @@ const QUESTS = [
         requirements: ['Удержание 30 секунд', 'Руки полностью прямые', 'Корпус стабилен'],
     },
 
-    // Abs (пресс)
+    // Abs
     {
         id: 'abs-20', cat: 'abs', icon: '🔥', name: '20 скручиваний',
         desc: 'Базовые скручивания — 20 раз', points: 40, diff: 'Легко',
@@ -116,17 +172,17 @@ const ACHIEVEMENTS = [
     { id: '1000-pts', icon: '🏆', name: '1000 баллов', desc: 'Набери 1000 баллов', condition: s => s.points >= 1000 },
     { id: 'streak-3', icon: '📅', name: '3 дня подряд', desc: 'Тренируйся 3 дня подряд', condition: s => s.streak >= 3 },
     { id: 'streak-7', icon: '🗓️', name: 'Неделя героя', desc: 'Тренируйся 7 дней подряд', condition: s => s.streak >= 7 },
-    { id: 'pullup-master', icon: '🏋️', name: 'Мастер турника', desc: 'Выполни все квесты на турнике', condition: s => QUESTS.filter(q => q.cat === 'pullup').every(q => s.completed.includes(q.id)) },
-    { id: 'pushup-master', icon: '👊', name: 'Мастер отжиманий', desc: 'Выполни все квесты отжиманий', condition: s => QUESTS.filter(q => q.cat === 'pushup').every(q => s.completed.includes(q.id)) },
-    { id: 'abs-master', icon: '🔥', name: 'Железный пресс', desc: 'Выполни все квесты на пресс', condition: s => QUESTS.filter(q => q.cat === 'abs').every(q => s.completed.includes(q.id)) },
+    { id: 'pullup-master', icon: '🏋️', name: 'Мастер турника', desc: 'Все квесты на турнике', condition: s => QUESTS.filter(q => q.cat === 'pullup').every(q => s.completed.includes(q.id)) },
+    { id: 'pushup-master', icon: '👊', name: 'Мастер отжиманий', desc: 'Все квесты отжиманий', condition: s => QUESTS.filter(q => q.cat === 'pushup').every(q => s.completed.includes(q.id)) },
+    { id: 'abs-master', icon: '🔥', name: 'Железный пресс', desc: 'Все квесты на пресс', condition: s => QUESTS.filter(q => q.cat === 'abs').every(q => s.completed.includes(q.id)) },
 ];
 
 const FAKE_LEADERS = [
-    { name: 'Артём', avatar: '🦸', points: 2450, level: 8 },
-    { name: 'Маша', avatar: '🦸‍♀️', points: 2100, level: 7 },
-    { name: 'Дима', avatar: '🥷', points: 1800, level: 6 },
-    { name: 'Лиза', avatar: '🤸', points: 1500, level: 5 },
-    { name: 'Макс', avatar: '🧗', points: 1200, level: 5 },
+    { name: 'Артём', avatar: 'hero', points: 2450, level: 8 },
+    { name: 'Маша', avatar: 'mage', points: 2100, level: 7 },
+    { name: 'Дима', avatar: 'ninja', points: 1800, level: 6 },
+    { name: 'Лиза', avatar: 'warrior', points: 1500, level: 5 },
+    { name: 'Макс', avatar: 'robot', points: 1200, level: 5 },
 ];
 
 // ===== State =====
@@ -174,14 +230,15 @@ function init() {
 
 function showScreen(id) {
     document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-    document.getElementById(id).classList.add('active');
+    const screen = document.getElementById(id);
+    screen.classList.add('active');
     document.getElementById('navbar').style.display = (id === 'profile-screen') ? 'none' : '';
     if (id === 'dashboard-screen') updateNav();
 }
 
 function updateNav() {
-    document.getElementById('nav-points').textContent = state.points + ' ⭐';
-    document.getElementById('nav-level').textContent = 'Уровень ' + state.level;
+    document.getElementById('nav-points').textContent = state.points;
+    document.getElementById('nav-level').textContent = 'Ур. ' + state.level;
 }
 
 // ===== Profile =====
@@ -206,7 +263,6 @@ function checkProfileReady() {
     const btn = document.getElementById('profile-save-btn');
     btn.disabled = !ready;
 
-    // Show hint about what's missing
     let hint = '';
     if (!selectedAvatar) hint = 'Выбери аватар';
     else if (!name) hint = 'Введи имя героя';
@@ -216,6 +272,9 @@ function checkProfileReady() {
 }
 
 document.getElementById('profile-save-btn').addEventListener('click', () => {
+    const btn = document.getElementById('profile-save-btn');
+    if (btn.disabled) return;
+
     state.profile = {
         name: document.getElementById('profile-name').value.trim(),
         age: parseInt(document.getElementById('profile-age').value),
@@ -238,7 +297,8 @@ function updateDashboard() {
     if (!state.profile) return;
     const p = state.profile;
 
-    document.getElementById('dash-avatar').textContent = p.avatar;
+    const avatarEl = document.getElementById('dash-avatar');
+    avatarEl.innerHTML = AVATAR_SVGS[p.avatar] || '';
     document.getElementById('dash-name').textContent = p.name;
 
     const xpPct = Math.min(100, (state.xp / state.xpNext) * 100);
@@ -280,19 +340,19 @@ function renderQuests(cat) {
     const list = document.getElementById('quest-list');
     const filtered = cat === 'all' ? QUESTS : QUESTS.filter(q => q.cat === cat);
 
-    list.innerHTML = filtered.map(q => {
+    list.innerHTML = filtered.map((q, i) => {
         const done = state.completed.includes(q.id);
         return `
-            <div class="quest-item ${done ? 'completed' : ''}" data-quest-id="${q.id}">
+            <div class="quest-item ${done ? 'completed' : ''}" data-quest-id="${q.id}" style="animation-delay: ${i * 40}ms">
                 <div class="quest-item-icon">${q.icon}</div>
                 <div class="quest-item-info">
                     <h3>${q.name}</h3>
                     <p>${q.desc}</p>
                 </div>
                 ${done
-                    ? '<span class="check-mark">✅</span>'
+                    ? '<span class="check-mark">&#10003;</span>'
                     : `<div class="quest-item-reward">
-                        <span class="points">${q.points} ⭐</span>
+                        <span class="points">${q.points}</span>
                         <small>${q.diff}</small>
                        </div>`
                 }
@@ -319,24 +379,24 @@ function openQuest(questId) {
     document.getElementById('quest-icon').textContent = quest.icon;
     document.getElementById('quest-name').textContent = quest.name;
     document.getElementById('quest-desc').textContent = quest.desc;
-    document.getElementById('quest-points-badge').textContent = `⭐ ${quest.points} баллов`;
+    document.getElementById('quest-points-badge').textContent = quest.points + ' баллов';
     document.getElementById('quest-diff-badge').textContent = quest.diff;
 
     const reqList = document.getElementById('quest-requirements-list');
     reqList.innerHTML = quest.requirements.map(r => `<li>${r}</li>`).join('');
 
-    // Reset upload
     document.getElementById('video-preview').hidden = true;
     document.getElementById('upload-zone').style.display = '';
     document.getElementById('video-input').value = '';
     document.getElementById('upload-comment').value = '';
     document.getElementById('submit-quest-btn').disabled = true;
 
+    const submitBtn = document.getElementById('submit-quest-btn');
     if (state.completed.includes(questId)) {
-        document.getElementById('submit-quest-btn').textContent = '✅ Квест уже выполнен';
-        document.getElementById('submit-quest-btn').disabled = true;
+        submitBtn.innerHTML = '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Квест выполнен';
+        submitBtn.disabled = true;
     } else {
-        document.getElementById('submit-quest-btn').textContent = '✅ Отправить на проверку';
+        submitBtn.innerHTML = '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Отправить на проверку';
     }
 
     showScreen('quest-screen');
@@ -389,11 +449,8 @@ document.getElementById('submit-quest-btn').addEventListener('click', () => {
 
     const quest = QUESTS.find(q => q.id === currentQuestId);
     const comment = document.getElementById('upload-comment').value.trim();
-
-    // Save video as blob URL (in real app — upload to server)
     const videoUrl = URL.createObjectURL(selectedFile);
 
-    // Add to history
     state.history.unshift({
         questId: quest.id,
         questName: quest.name,
@@ -403,38 +460,31 @@ document.getElementById('submit-quest-btn').addEventListener('click', () => {
         videoUrl: videoUrl,
         videoName: selectedFile.name,
         date: new Date().toISOString(),
-        status: 'approved', // auto-approve for now
+        status: 'approved',
     });
 
-    // Update state
     state.completed.push(quest.id);
     state.completedQuests++;
     state.points += quest.points;
     state.xp += quest.points;
 
-    // Level up
     while (state.xp >= state.xpNext) {
         state.xp -= state.xpNext;
         state.level++;
         state.xpNext = Math.floor(state.xpNext * 1.5);
     }
 
-    // Streak
     const today = new Date().toDateString();
     if (state.lastTrainDate) {
         const last = new Date(state.lastTrainDate);
         const diff = Math.floor((new Date(today) - last) / 86400000);
-        if (diff === 1) {
-            state.streak++;
-        } else if (diff > 1) {
-            state.streak = 1;
-        }
+        if (diff === 1) state.streak++;
+        else if (diff > 1) state.streak = 1;
     } else {
         state.streak = 1;
     }
     state.lastTrainDate = today;
 
-    // Check achievements
     let newAchievement = null;
     ACHIEVEMENTS.forEach(ach => {
         if (!state.unlockedAchievements.includes(ach.id) && ach.condition(state)) {
@@ -445,14 +495,13 @@ document.getElementById('submit-quest-btn').addEventListener('click', () => {
 
     saveState();
 
-    // Show success
     document.getElementById('success-text').textContent = `Квест "${quest.name}" выполнен!`;
-    document.getElementById('success-points').textContent = `+${quest.points} ⭐`;
+    document.getElementById('success-points').textContent = `+${quest.points}`;
 
     const achEl = document.getElementById('success-achievement');
     if (newAchievement) {
         achEl.hidden = false;
-        achEl.textContent = `🏅 Новое достижение: ${newAchievement.icon} ${newAchievement.name}`;
+        achEl.textContent = `Новое достижение: ${newAchievement.icon} ${newAchievement.name}`;
     } else {
         achEl.hidden = true;
     }
@@ -482,7 +531,7 @@ function renderHistory() {
         const date = new Date(h.date);
         const dateStr = date.toLocaleDateString('ru-RU', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
         const statusClass = h.status === 'approved' ? 'status-approved' : 'status-pending';
-        const statusText = h.status === 'approved' ? '✅ Принято' : '⏳ На проверке';
+        const statusText = h.status === 'approved' ? 'Принято' : 'На проверке';
 
         return `
             <div class="history-item">
@@ -492,7 +541,7 @@ function renderHistory() {
                     <span class="date">${dateStr}</span>
                     <span class="status ${statusClass}">${statusText}</span>
                 </div>
-                <span class="history-points">+${h.points} ⭐</span>
+                <span class="history-points">+${h.points}</span>
             </div>
         `;
     }).join('');
@@ -532,31 +581,38 @@ function renderLeaderboard() {
         const rank = i + 1;
         const rankClass = rank <= 3 ? `rank-${rank}` : '';
         const meClass = l.isMe ? 'me' : '';
+        const avatarHtml = AVATAR_SVGS[l.avatar]
+            ? `<span class="leader-avatar">${AVATAR_SVGS[l.avatar].replace(/width="48"/g, 'width="32"').replace(/height="48"/g, 'height="32"')}</span>`
+            : `<span class="leader-avatar">${l.avatar}</span>`;
+
         return `
             <div class="leader-item ${meClass}">
-                <div class="leader-rank ${rankClass}">${rank <= 3 ? ['🥇','🥈','🥉'][rank-1] : rank}</div>
-                <span class="leader-avatar">${l.avatar}</span>
+                <div class="leader-rank ${rankClass}">${rank <= 3 ? ['1','2','3'][rank-1] : rank}</div>
+                ${avatarHtml}
                 <div class="leader-info">
                     <h4>${l.name}${l.isMe ? ' (ты)' : ''}</h4>
                     <small>Уровень ${l.level}</small>
                 </div>
-                <span class="leader-points">${l.points} ⭐</span>
+                <span class="leader-points">${l.points}</span>
             </div>
         `;
     }).join('');
 }
 
-// ===== Drag & Drop on upload zone =====
+// ===== Drag & Drop =====
 uploadZone.addEventListener('dragover', (e) => {
     e.preventDefault();
     uploadZone.style.borderColor = 'var(--primary-light)';
+    uploadZone.style.background = 'rgba(108,92,231,0.06)';
 });
 uploadZone.addEventListener('dragleave', () => {
     uploadZone.style.borderColor = '';
+    uploadZone.style.background = '';
 });
 uploadZone.addEventListener('drop', (e) => {
     e.preventDefault();
     uploadZone.style.borderColor = '';
+    uploadZone.style.background = '';
     const file = e.dataTransfer.files[0];
     if (file && file.type.startsWith('video/')) {
         const dt = new DataTransfer();
