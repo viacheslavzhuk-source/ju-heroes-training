@@ -505,6 +505,95 @@ const EDU_QUESTS = [
     },
 ];
 
+// ===== Topic Resources (Perplexity.ai enrichment) =====
+const TOPIC_RESOURCES = {
+    1: {
+        name: 'Что такое AI',
+        summary: 'Искусственный интеллект (AI) — это умные программы, которые учатся на огромных объёмах данных, чтобы предсказывать и принимать решения, как распознавание лиц в фото или рекомендации видео на YouTube. В отличие от обычных программ, AI использует нейронные сети, вдохновлённые человеческим мозгом, где «нейроны» анализируют закономерности из миллионов примеров. AI не думает и не чувствует — он работает на статистике.',
+        citation: {
+            text: 'Искусственный интеллект (ИИ) — это технологии, которые уже сейчас меняют мир... Его работа основана на сложных математических формулах и использовании больших данных.',
+            source: 'Codim.online, YouTube-курс по ИИ для детей'
+        },
+        links: [
+            { title: 'Курс по ИИ для детей и родителей', desc: 'Видео объясняет AI простым языком с примерами', url: 'https://www.youtube.com/watch?v=agboLkE9X38', type: 'video' },
+            { title: 'Искусственный интеллект: 5 больших идей', desc: 'Видео для младших школьников о том, как объяснить AI ребёнку', url: 'https://www.youtube.com/watch?v=_IdSZGidBK4', type: 'video' },
+            { title: 'AI4K12: Big ideas for AI education', desc: 'Руководство по основам AI для K-12 школ', url: 'https://ai4k12.net', type: 'website' },
+            { title: 'Нейросеть простыми словами', desc: 'Статья с примерами, как нейронные сети имитируют мозг', url: 'https://blog.skillfactory.ru/glossary/nejronnaya-set/', type: 'article' },
+            { title: 'Khan Academy AI learning', desc: 'Интерактив о машинном обучении и нейросетях', url: 'https://aiforsocialgood.ca/blog/khan-academy-explores-the-world-of-artificial-intelligence', type: 'interactive' },
+        ]
+    },
+    2: {
+        name: 'Основы работы с ChatGPT',
+        summary: 'ChatGPT — это чатбот от OpenAI на базе GPT (Generative Pre-trained Transformer), который генерирует текст, предсказывая следующее слово на основе огромных данных. Он похож на Claude, Gemini или YandexGPT, но всегда проверяйте ответы: AI может «галлюцинировать» — уверенно выдавать выдумки. Используйте безопасно: не делитесь личными данными, паролями или адресами.',
+        citation: {
+            text: 'GPT (Generative Pre-trained Transformer) — это семейство нейросетевых моделей, разработанных для понимания и генерации текста, максимально приближенного к человеческому.',
+            source: 'Skyeng, статья о GPT'
+        },
+        links: [
+            { title: 'ChatGPT для детей: когда начинать', desc: 'Видео с правилами безопасного использования для детей', url: 'https://www.youtube.com/watch?v=azfQG_ONFMc', type: 'video' },
+            { title: 'Что такое галлюцинации ИИ', desc: 'Простое объяснение с примерами для понимания ошибок AI', url: 'https://giga.chat/help/articles/ai-hallucinations-and-solutions', type: 'article' },
+            { title: 'Khan Academy в ChatGPT', desc: 'Интеграция для обучения, объясняет GPT и использование', url: 'https://blog.khanacademy.org/from-chat-to-classroom-explore-khan-academys-math-questions-in-chatgpt/', type: 'article' },
+            { title: 'Generative pre-trained transformer', desc: 'Википедия с базовым определением GPT', url: 'https://ru.wikipedia.org/wiki/Generative_pre-trained_transformer', type: 'article' },
+            { title: 'ChatGPT помогает учиться', desc: 'Интервью CEO Khan Academy о ChatGPT в образовании', url: 'https://www.youtube.com/watch?v=-nmT7ChcNas', type: 'video' },
+        ]
+    },
+    3: {
+        name: 'Промпт-инжиниринг',
+        summary: 'Промпт — это точный запрос к AI, чтобы получить лучший ответ; формула: Роль (ты — эксперт) + Задача + Контекст + Формат (список, таблица). Улучшайте итерациями, few-shot prompting (дайте 2-3 примера) и ролями для конкретности. Промпт-инженеры — востребованная профессия с зарплатой от $100k, где запросы переписывают 5-10 раз.',
+        citation: {
+            text: 'Prompt engineering is the art of crafting the right instruction or question to help an AI model produce a desired response. Think of it as learning to speak the language of AI.',
+            source: 'Codingal, Prompt Engineering for Kids'
+        },
+        links: [
+            { title: 'Промпт-инжиниринг для родителей и детей', desc: 'Интерактивный урок с тренажёром от DataLesson', url: 'https://datalesson.ru/lessons/prompt/parents', type: 'interactive' },
+            { title: 'Prompt Engineering Challenges for Kids', desc: 'Игровые задания по промптам для детей', url: 'https://www.codingal.com/coding-for-kids/blog/prompt-engineering-challenges-for-kids/', type: 'interactive' },
+            { title: 'CRAFT Formula в Khan Academy', desc: 'Видео-демо структурированных промптов', url: 'https://www.khanacademy.org/partner-content/yuva-ai-for-all/x11a06d2ab0cc5322:yuva-ai/x11a06d2ab0cc5322:module-3/v/demo-use-the-', type: 'video' },
+            { title: 'Few-shot prompting простыми словами', desc: 'Объяснение с примерами для новичков', url: 'https://ya.zerocoder.ru/pgt-chto-takoe-few-shot-prompting/', type: 'article' },
+            { title: 'Урок по промпт-инжинирингу от Сбера', desc: 'Игровой тренажёр для школьников', url: 'https://xn--h1adlhdnlo2c.xn--p1ai/lessons/prompt', type: 'interactive' },
+        ]
+    },
+    4: {
+        name: 'AI для учёбы и творчества',
+        summary: 'AI помогает с учёбой: объясняет темы, разбирает задачи, проверяет тексты (ChatGPT, Grammarly, Khan Academy), генерирует идеи для сочинений без плагиата. В творчестве — изображения (DALL-E, Kandinsky), музыка (Suno), видео (Runway); 60% школьников используют AI в 2025. Всегда указывайте источник и проверяйте — AI как инструмент, а не замена.',
+        citation: {
+            text: 'AI can be used so it\'s actually helping students to learn, with tutoring and teaching assistance.',
+            source: 'Sal Khan, CEO Khan Academy'
+        },
+        links: [
+            { title: 'ChatGPT для домашних заданий', desc: 'Видео как создавать уроки с AI для детей', url: 'https://www.youtube.com/watch?v=MPMxbSHb8bA', type: 'video' },
+            { title: 'Khan Academy в ChatGPT', desc: 'Генерация вопросов и упражнений по математике', url: 'https://blog.khanacademy.org/from-chat-to-classroom-explore-khan-academys-math-questions-in-chatgpt/', type: 'article' },
+            { title: 'AI в Khan Academy', desc: 'Персонализированное обучение с AI', url: 'https://aiforsocialgood.ca/blog/khan-academy-explores-the-world-of-artificial-intelligence', type: 'article' },
+            { title: 'Бесплатные AI-инструменты для детей', desc: 'Курсы по использованию в творчестве', url: 'https://www.youtube.com/watch?v=agboLkE9X38', type: 'video' },
+        ]
+    },
+    5: {
+        name: 'Этика AI',
+        summary: 'Используйте AI честно: не выдавайте его текст за свой (плагиат), указывайте «Помог ChatGPT с идеями». AI имеет bias (предвзятость из данных) и галлюцинации — всегда проверяйте факты в источниках. Авторские права на AI-контент спорны; вы отвечаете за результат, развивая критическое мышление.',
+        citation: {
+            text: 'Галлюцинации ИИ возникают, когда нейросети генерируют информацию, которая кажется правдивой, но неверна... Не доверяй, проверь.',
+            source: 'GigaChat, статья о галлюцинациях'
+        },
+        links: [
+            { title: 'Галлюцинации ИИ для понимания', desc: 'Простые примеры и как проверять', url: 'https://giga.chat/help/articles/ai-hallucinations-and-solutions', type: 'article' },
+            { title: 'ИИ-галлюцинации и этика', desc: 'Статья о предвзятости и ответственности', url: 'https://huxley.media/ru/ii-galljucinacii-ot-obuchenija-neznaniju-do-veselogo-breda/', type: 'article' },
+            { title: 'AI4K12 этические guidelines', desc: 'Руководство по этике AI для школ', url: 'https://ai4k12.net', type: 'website' },
+            { title: 'Промпты и безопасность для детей', desc: 'Урок с этическими правилами', url: 'https://datalesson.ru/lessons/prompt/parents', type: 'interactive' },
+            { title: 'Khan Academy AI ethics', desc: 'Модуль о ответственном использовании', url: 'https://www.khanacademy.org/partner-content/yuva-ai-for-all', type: 'interactive' },
+        ]
+    },
+};
+
+// Helper: get resources for a topic
+function getTopicResources(topicNumber) {
+    return TOPIC_RESOURCES[topicNumber] || null;
+}
+
+// Helper: get all resource links for a topic
+function getTopicLinks(topicNumber) {
+    const res = TOPIC_RESOURCES[topicNumber];
+    return res ? res.links : [];
+}
+
 // ===== Education Quest Logic =====
 
 // Current education state
@@ -541,6 +630,7 @@ function openEduQuest(questId) {
     const screen = document.getElementById('edu-screen');
     document.getElementById('edu-back-btn').onclick = () => {
         stopAudio();
+        destroyVimeoPlayer();
         showScreen('dashboard-screen');
         updateDashboard();
     };
@@ -564,6 +654,9 @@ function openEduQuest(questId) {
             break;
         case 'audio':
             renderAudio(quest, contentArea);
+            break;
+        case 'video':
+            renderVideo(quest, contentArea);
             break;
     }
 
@@ -959,6 +1052,98 @@ function audioNavSection(dir) {
 function jumpToSection(index) {
     const diff = index - eduState.audioSection;
     if (diff !== 0) audioNavSection(diff);
+}
+
+// ===== Video Renderer (Vimeo) =====
+let vimeoPlayer = null;
+
+function renderVideo(quest, container) {
+    const vimeoId = quest.content.vimeoId;
+    const isPlaceholder = !vimeoId || vimeoId.startsWith('YOUR_VIMEO_ID');
+
+    container.innerHTML = `
+        <div class="video-container">
+            <div class="video-info-panel">
+                <span class="video-module-num">Модуль ${quest.content.moduleNum}</span>
+                <h3>${quest.content.title}</h3>
+            </div>
+            <div class="video-player-wrapper" id="vimeo-player-wrapper">
+                ${isPlaceholder ? `
+                    <div class="video-placeholder">
+                        <svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.4">
+                            <polygon points="5 3 19 12 5 21 5 3"/>
+                        </svg>
+                        <p>Видео скоро будет доступно</p>
+                        <small>Vimeo ID не задан для модуля ${quest.content.moduleNum}</small>
+                    </div>
+                ` : `<div id="vimeo-player" data-vimeo-id="${vimeoId}"></div>`}
+            </div>
+            ${!isPlaceholder ? `
+                <div class="video-progress-bar">
+                    <div class="video-progress-fill" id="video-progress-fill"></div>
+                </div>
+                <div class="video-watch-hint" id="video-watch-hint">Посмотри 80% видео чтобы завершить квест</div>
+            ` : ''}
+            <div class="video-complete-notice" id="video-complete-notice" hidden>Видео просмотрено! Можешь завершить квест.</div>
+        </div>
+    `;
+
+    const completeBtn = document.getElementById('edu-complete-btn');
+
+    if (isPlaceholder) {
+        completeBtn.disabled = false;
+        return;
+    }
+
+    completeBtn.disabled = true;
+
+    try {
+        vimeoPlayer = new Vimeo.Player('vimeo-player', {
+            id: vimeoId,
+            responsive: true,
+            color: '6c5ce7',
+            dnt: true,
+        });
+
+        vimeoPlayer.on('timeupdate', (data) => {
+            const pct = data.percent * 100;
+            const fill = document.getElementById('video-progress-fill');
+            if (fill) fill.style.width = pct + '%';
+
+            if (data.percent >= 0.8 && completeBtn.disabled) {
+                completeBtn.disabled = false;
+                const hint = document.getElementById('video-watch-hint');
+                if (hint) hint.hidden = true;
+                const notice = document.getElementById('video-complete-notice');
+                if (notice) notice.hidden = false;
+            }
+        });
+
+        vimeoPlayer.on('error', () => {
+            const wrapper = document.getElementById('vimeo-player-wrapper');
+            if (wrapper) {
+                wrapper.innerHTML = `
+                    <div class="video-placeholder">
+                        <svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="#e17055" stroke-width="1.5">
+                            <circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/>
+                        </svg>
+                        <p>Ошибка загрузки видео</p>
+                        <small>Проверь подключение к интернету</small>
+                    </div>
+                `;
+            }
+            completeBtn.disabled = false;
+        });
+    } catch (e) {
+        completeBtn.disabled = false;
+    }
+}
+
+function destroyVimeoPlayer() {
+    if (vimeoPlayer) {
+        vimeoPlayer.destroy().catch(() => {});
+        vimeoPlayer = null;
+    }
 }
 
 function stopAudio() {

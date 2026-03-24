@@ -388,7 +388,7 @@ function renderQuests(cat) {
         const done = state.completed.includes(q.id);
         const iconSvg = window.QUEST_ICONS && window.QUEST_ICONS[q.id] ? window.QUEST_ICONS[q.id] : q.icon;
         const isEdu = q.cat === 'learn';
-        const typeBadge = isEdu ? `<span class="quest-type-badge type-${q.type}">${{flashcard:'🃏 Карточки', quiz:'📝 Тест', infographic:'📊 Схема', audio:'🎧 Аудио'}[q.type] || q.type}</span>` : '';
+        const typeBadge = isEdu ? `<span class="quest-type-badge type-${q.type}">${{flashcard:'🃏 Карточки', quiz:'📝 Тест', infographic:'📊 Схема', audio:'🎧 Аудио', video:'🎬 Видео'}[q.type] || q.type}</span>` : '';
         return `
             <div class="quest-item ${done ? 'completed' : ''} ${isEdu ? 'edu-quest' : ''}" data-quest-id="${q.id}" data-is-edu="${isEdu}" style="animation-delay: ${i * 40}ms">
                 <div class="quest-item-icon ${isEdu ? 'edu-icon' : ''}">${iconSvg}</div>

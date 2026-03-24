@@ -1385,6 +1385,86 @@ body {
     color: var(--text-dim);
 }
 
+/* ===== Video Player (Vimeo) ===== */
+.type-video { background: rgba(162,155,254,0.12); color: var(--primary-light); }
+
+.video-container { display: flex; flex-direction: column; gap: 12px; }
+
+.video-info-panel {
+    background: var(--bg-card);
+    border-radius: var(--radius);
+    padding: 16px 20px;
+    border: 1px solid rgba(255,255,255,0.04);
+}
+.video-info-panel .video-module-num {
+    font-size: 0.72em;
+    font-weight: 700;
+    color: var(--primary-light);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+.video-info-panel h3 {
+    margin-top: 4px;
+    font-size: 1.05em;
+    color: var(--text);
+}
+
+.video-player-wrapper {
+    border-radius: var(--radius);
+    overflow: hidden;
+    background: var(--bg-card);
+    border: 1px solid rgba(255,255,255,0.06);
+    min-height: 200px;
+}
+.video-player-wrapper iframe {
+    border-radius: var(--radius);
+}
+
+.video-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 48px 20px;
+    text-align: center;
+    color: var(--text-dim);
+}
+.video-placeholder p { font-size: 0.95em; margin: 0; }
+.video-placeholder small { font-size: 0.78em; opacity: 0.5; }
+
+.video-progress-bar {
+    height: 4px;
+    background: rgba(255,255,255,0.06);
+    border-radius: 2px;
+    overflow: hidden;
+}
+.video-progress-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, var(--primary), var(--secondary));
+    border-radius: 2px;
+    transition: width 0.3s ease;
+}
+
+.video-watch-hint {
+    font-size: 0.8em;
+    color: var(--text-dim);
+    text-align: center;
+    padding: 6px;
+}
+
+.video-complete-notice {
+    text-align: center;
+    padding: 12px;
+    border-radius: var(--radius);
+    background: linear-gradient(135deg, rgba(0,184,148,0.12), rgba(0,206,201,0.08));
+    color: var(--success);
+    font-weight: 600;
+    font-size: 0.88em;
+    border: 1px solid rgba(0,184,148,0.2);
+}
+
 /* ===== Responsive ===== */
 @media (min-width: 481px) {
     #app { border-left: 1px solid rgba(255,255,255,0.03); border-right: 1px solid rgba(255,255,255,0.03); }
