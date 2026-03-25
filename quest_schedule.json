@@ -1,0 +1,32 @@
+{
+    "version": "2.0",
+    "description": "Digital Natives 2.0 — расписание контента на 2 недели",
+    "week_schedule": {
+        "2026-03-25": { "module": 1, "format": "lesson", "ageGroup": "both" },
+        "2026-03-26": { "module": 1, "format": "podcast", "ageGroup": "both" },
+        "2026-03-27": { "module": 1, "format": "quiz", "ageGroup": "both" },
+        "2026-03-28": { "module": 1, "format": "flashcard", "ageGroup": "both" },
+        "2026-03-29": { "module": 1, "format": "lesson", "ageGroup": "both" },
+        "2026-03-30": { "module": 1, "format": "podcast", "ageGroup": "both" },
+        "2026-03-31": { "module": 1, "format": "flashcard", "ageGroup": "both" },
+        "2026-04-01": { "module": 2, "format": "lesson", "ageGroup": "both" },
+        "2026-04-02": { "module": 2, "format": "podcast", "ageGroup": "both" },
+        "2026-04-03": { "module": 2, "format": "quiz", "ageGroup": "both" },
+        "2026-04-04": { "module": 2, "format": "flashcard", "ageGroup": "both" },
+        "2026-04-05": { "module": 2, "format": "lesson", "ageGroup": "both" },
+        "2026-04-06": { "module": 2, "format": "podcast", "ageGroup": "both" },
+        "2026-04-07": { "module": 2, "format": "flashcard", "ageGroup": "both" }
+    },
+    "modules": {
+        "1": {
+            "name": "AI-грамотность",
+            "module_key": "ai-literacy",
+            "topic": 1
+        },
+        "2": {
+            "name": "Критическое мышление",
+            "module_key": "critical-thinking",
+            "topic": 2
+        }
+    }
+}

@@ -434,8 +434,21 @@ document.querySelectorAll('.cat-btn').forEach(btn => {
 });
 
 // ===== Render Quests =====
+function getAgeGroup() {
+    // Determine age group from current user's age
+    if (state.profile && state.profile.age) {
+        return state.profile.age >= 14 ? 'teen_16' : 'kid_10';
+    }
+    return localStorage.getItem('ju-heroes-age-group') || 'kid_10';
+}
+
 function getAllQuests() {
-    return [...QUESTS, ...(typeof EDU_QUESTS !== 'undefined' ? EDU_QUESTS : [])];
+    const physical = QUESTS;
+    const edu = typeof EDU_QUESTS !== 'undefined' ? EDU_QUESTS : [];
+    const ageGroup = getAgeGroup();
+    // Filter edu quests by age group (quests without ageGroup are shown to all)
+    const filteredEdu = edu.filter(q => !q.ageGroup || q.ageGroup === ageGroup);
+    return [...physical, ...filteredEdu];
 }
 
 const FREQ_ORDER = ['daily', 'hot', 'weekly', 'monthly', 'quarterly', 'yearly'];
@@ -453,7 +466,7 @@ function renderQuestCard(q, i) {
     const iconSvg = window.QUEST_ICONS && window.QUEST_ICONS[q.id] ? window.QUEST_ICONS[q.id] : q.icon;
     const isEdu = q.cat === 'learn';
     const isDaily = q.freq === 'daily' && !done;
-    const typeBadge = isEdu ? `<span class="quest-type-badge type-${q.type}">${{flashcard:'🃏 Карточки', quiz:'📝 Тест', infographic:'📊 Схема', audio:'🎧 Аудио', video:'🎬 Видео'}[q.type] || q.type}</span>` : '';
+    const typeBadge = isEdu ? `<span class="quest-type-badge type-${q.type}">${{flashcard:'🃏 Карточки', quiz:'📝 Тест', infographic:'📊 Схема', audio:'🎧 Аудио', video:'🎬 Видео', podcast:'🎧 Подкаст', lesson:'📖 Урок'}[q.type] || q.type}</span>` : '';
     const fireIcon = isDaily ? '<span class="daily-fire">🔥</span>' : '';
     return `
         <div class="quest-item ${done ? 'completed' : ''} ${isEdu ? 'edu-quest' : ''} ${isDaily ? 'quest-daily' : ''}" data-quest-id="${q.id}" data-is-edu="${isEdu}" style="animation-delay: ${i * 40}ms">
