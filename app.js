@@ -61,103 +61,103 @@ const QUESTS = [
     // Pull-ups
     {
         id: 'pullup-1', cat: 'pullup', icon: '🏋️', name: 'Первое подтягивание',
-        desc: 'Подтянись хотя бы 1 раз на турнике', points: 50, diff: 'Легко',
+        desc: 'Подтянись хотя бы 1 раз на турнике', points: 50, diff: 'Легко', freq: 'daily',
         requirements: ['Подтянуться 1 раз', 'Подбородок выше перекладины', 'Полное выпрямление рук внизу'],
     },
     {
         id: 'pullup-3', cat: 'pullup', icon: '💪', name: '3 подтягивания',
-        desc: 'Выполни 3 подтягивания подряд без пауз', points: 100, diff: 'Средне',
+        desc: 'Выполни 3 подтягивания подряд без пауз', points: 100, diff: 'Средне', freq: 'daily',
         requirements: ['3 подтягивания подряд', 'Чистая техника', 'Без раскачки'],
     },
     {
         id: 'pullup-5', cat: 'pullup', icon: '🔥', name: '5 подтягиваний',
-        desc: 'Серия из 5 подтягиваний — ты сильный!', points: 150, diff: 'Средне',
+        desc: 'Серия из 5 подтягиваний — ты сильный!', points: 150, diff: 'Средне', freq: 'hot',
         requirements: ['5 подтягиваний подряд', 'Полная амплитуда', 'Контролируемый спуск'],
     },
     {
         id: 'pullup-10', cat: 'pullup', icon: '⚡', name: '10 подтягиваний',
-        desc: 'Выполни 10 подтягиваний — уровень героя!', points: 300, diff: 'Сложно',
+        desc: 'Выполни 10 подтягиваний — уровень героя!', points: 300, diff: 'Сложно', freq: 'monthly',
         requirements: ['10 подтягиваний подряд', 'Чистая техника', 'Без помощи ног'],
     },
     {
         id: 'pullup-wide', cat: 'pullup', icon: '🦅', name: 'Широкий хват',
-        desc: 'Подтягивания широким хватом — 5 раз', points: 200, diff: 'Сложно',
+        desc: 'Подтягивания широким хватом — 5 раз', points: 200, diff: 'Сложно', freq: 'weekly',
         requirements: ['5 подтягиваний широким хватом', 'Руки шире плеч', 'Грудью к перекладине'],
     },
 
     // Push-ups
     {
         id: 'pushup-5', cat: 'pushup', icon: '👊', name: '5 отжиманий',
-        desc: 'Отожмись от пола 5 раз', points: 30, diff: 'Легко',
+        desc: 'Отожмись от пола 5 раз', points: 30, diff: 'Легко', freq: 'daily',
         requirements: ['5 отжиманий от пола', 'Корпус прямой', 'Грудь касается пола'],
     },
     {
         id: 'pushup-10', cat: 'pushup', icon: '💪', name: '10 отжиманий',
-        desc: 'Серия из 10 отжиманий', points: 60, diff: 'Легко',
+        desc: 'Серия из 10 отжиманий', points: 60, diff: 'Легко', freq: 'daily',
         requirements: ['10 отжиманий подряд', 'Ровная спина', 'Полная амплитуда'],
     },
     {
         id: 'pushup-20', cat: 'pushup', icon: '🔥', name: '20 отжиманий',
-        desc: '20 отжиманий без остановки — отлично!', points: 120, diff: 'Средне',
+        desc: '20 отжиманий без остановки — отлично!', points: 120, diff: 'Средне', freq: 'hot',
         requirements: ['20 отжиманий подряд', 'Без пауз на верху', 'Чистая техника'],
     },
     {
         id: 'pushup-diamond', cat: 'pushup', icon: '💎', name: 'Алмазные отжимания',
-        desc: 'Отжимания с узкой постановкой рук — 10 раз', points: 180, diff: 'Сложно',
+        desc: 'Отжимания с узкой постановкой рук — 10 раз', points: 180, diff: 'Сложно', freq: 'weekly',
         requirements: ['10 алмазных отжиманий', 'Руки вместе (ромб)', 'Локти вдоль корпуса'],
     },
     {
         id: 'pushup-50', cat: 'pushup', icon: '🏆', name: '50 отжиманий',
-        desc: 'Полсотни отжиманий — настоящий воин!', points: 350, diff: 'Сложно',
+        desc: 'Полсотни отжиманий — настоящий воин!', points: 350, diff: 'Сложно', freq: 'quarterly',
         requirements: ['50 отжиманий подряд', 'Можно 2 паузы по 3 сек', 'Видео от начала до конца'],
     },
 
     // Bars
     {
         id: 'bars-3', cat: 'bars', icon: '🤸', name: '3 раза на брусьях',
-        desc: 'Отжимания на брусьях — 3 повторения', points: 80, diff: 'Средне',
+        desc: 'Отжимания на брусьях — 3 повторения', points: 80, diff: 'Средне', freq: 'daily',
         requirements: ['3 отжимания на брусьях', 'Полный спуск до угла 90°', 'Полное выпрямление вверху'],
     },
     {
         id: 'bars-5', cat: 'bars', icon: '💪', name: '5 раз на брусьях',
-        desc: 'Уверенные 5 отжиманий на брусьях', points: 130, diff: 'Средне',
+        desc: 'Уверенные 5 отжиманий на брусьях', points: 130, diff: 'Средне', freq: 'hot',
         requirements: ['5 отжиманий подряд', 'Контролируемое движение', 'Без раскачки'],
     },
     {
         id: 'bars-10', cat: 'bars', icon: '⚡', name: '10 раз на брусьях',
-        desc: 'Десятка на брусьях — мощь!', points: 250, diff: 'Сложно',
+        desc: 'Десятка на брусьях — мощь!', points: 250, diff: 'Сложно', freq: 'monthly',
         requirements: ['10 отжиманий на брусьях', 'Чистая техника', 'Полная амплитуда'],
     },
     {
         id: 'bars-hold', cat: 'bars', icon: '🧘', name: 'Удержание на брусьях',
-        desc: 'Удержи себя на прямых руках 30 секунд', points: 100, diff: 'Средне',
+        desc: 'Удержи себя на прямых руках 30 секунд', points: 100, diff: 'Средне', freq: 'weekly',
         requirements: ['Удержание 30 секунд', 'Руки полностью прямые', 'Корпус стабилен'],
     },
 
     // Abs
     {
         id: 'abs-20', cat: 'abs', icon: '🔥', name: '20 скручиваний',
-        desc: 'Базовые скручивания — 20 раз', points: 40, diff: 'Легко',
+        desc: 'Базовые скручивания — 20 раз', points: 40, diff: 'Легко', freq: 'daily',
         requirements: ['20 скручиваний', 'Лопатки отрываются от пола', 'Руки за головой или на груди'],
     },
     {
         id: 'abs-plank30', cat: 'abs', icon: '🧘', name: 'Планка 30 сек',
-        desc: 'Удержи планку полминуты', points: 50, diff: 'Легко',
+        desc: 'Удержи планку полминуты', points: 50, diff: 'Легко', freq: 'daily',
         requirements: ['Планка 30 секунд', 'Тело в линии', 'Без прогиба в пояснице'],
     },
     {
         id: 'abs-plank60', cat: 'abs', icon: '⚡', name: 'Планка 60 сек',
-        desc: 'Минута в планке — железный пресс!', points: 120, diff: 'Средне',
+        desc: 'Минута в планке — железный пресс!', points: 120, diff: 'Средне', freq: 'hot',
         requirements: ['Планка 60 секунд', 'Стабильное положение', 'Дыхание ровное'],
     },
     {
         id: 'abs-legs', cat: 'abs', icon: '🦵', name: 'Подъём ног',
-        desc: 'Подъём ног лёжа — 15 раз', points: 100, diff: 'Средне',
+        desc: 'Подъём ног лёжа — 15 раз', points: 100, diff: 'Средне', freq: 'weekly',
         requirements: ['15 подъёмов ног', 'Ноги прямые', 'Поясница прижата к полу'],
     },
     {
         id: 'abs-vup', cat: 'abs', icon: '🏆', name: 'V-складка',
-        desc: 'Одновременный подъём рук и ног — 10 раз', points: 200, diff: 'Сложно',
+        desc: 'Одновременный подъём рук и ног — 10 раз', points: 200, diff: 'Сложно', freq: 'monthly',
         requirements: ['10 V-складок', 'Руки и ноги встречаются наверху', 'Контролируемый спуск'],
     },
 ];
@@ -423,6 +423,42 @@ function getAllQuests() {
     return [...QUESTS, ...(typeof EDU_QUESTS !== 'undefined' ? EDU_QUESTS : [])];
 }
 
+const FREQ_ORDER = ['daily', 'hot', 'weekly', 'monthly', 'quarterly', 'yearly'];
+const FREQ_LABELS = {
+    daily: '🔥 ОБЯЗАТЕЛЬНЫЕ НА СЕГОДНЯ 🔥',
+    hot: '⚡ Горячие',
+    weekly: '📅 Недельные',
+    monthly: '🗓️ Месячные',
+    quarterly: '📊 Квартальные',
+    yearly: '🏆 Годовые',
+};
+
+function renderQuestCard(q, i) {
+    const done = state.completed.includes(q.id);
+    const iconSvg = window.QUEST_ICONS && window.QUEST_ICONS[q.id] ? window.QUEST_ICONS[q.id] : q.icon;
+    const isEdu = q.cat === 'learn';
+    const isDaily = q.freq === 'daily' && !done;
+    const typeBadge = isEdu ? `<span class="quest-type-badge type-${q.type}">${{flashcard:'🃏 Карточки', quiz:'📝 Тест', infographic:'📊 Схема', audio:'🎧 Аудио', video:'🎬 Видео'}[q.type] || q.type}</span>` : '';
+    const fireIcon = isDaily ? '<span class="daily-fire">🔥</span>' : '';
+    return `
+        <div class="quest-item ${done ? 'completed' : ''} ${isEdu ? 'edu-quest' : ''} ${isDaily ? 'quest-daily' : ''}" data-quest-id="${q.id}" data-is-edu="${isEdu}" style="animation-delay: ${i * 40}ms">
+            <div class="quest-item-icon ${isEdu ? 'edu-icon' : ''}">${iconSvg}</div>
+            <div class="quest-item-info">
+                <h3>${fireIcon}${q.name}</h3>
+                <p>${q.desc}</p>
+                ${typeBadge}
+            </div>
+            ${done
+                ? '<span class="check-mark">&#10003;</span>'
+                : `<div class="quest-item-reward">
+                    <span class="points">${q.points}</span>
+                    <small>${q.diff}</small>
+                   </div>`
+            }
+        </div>
+    `;
+}
+
 function renderQuests(cat) {
     const list = document.getElementById('quest-list');
     const allQuests = getAllQuests();
@@ -433,29 +469,48 @@ function renderQuests(cat) {
         return;
     }
 
-    list.innerHTML = filtered.map((q, i) => {
-        const done = state.completed.includes(q.id);
-        const iconSvg = window.QUEST_ICONS && window.QUEST_ICONS[q.id] ? window.QUEST_ICONS[q.id] : q.icon;
-        const isEdu = q.cat === 'learn';
-        const typeBadge = isEdu ? `<span class="quest-type-badge type-${q.type}">${{flashcard:'🃏 Карточки', quiz:'📝 Тест', infographic:'📊 Схема', audio:'🎧 Аудио', video:'🎬 Видео'}[q.type] || q.type}</span>` : '';
-        return `
-            <div class="quest-item ${done ? 'completed' : ''} ${isEdu ? 'edu-quest' : ''}" data-quest-id="${q.id}" data-is-edu="${isEdu}" style="animation-delay: ${i * 40}ms">
-                <div class="quest-item-icon ${isEdu ? 'edu-icon' : ''}">${iconSvg}</div>
-                <div class="quest-item-info">
-                    <h3>${q.name}</h3>
-                    <p>${q.desc}</p>
-                    ${typeBadge}
-                </div>
-                ${done
-                    ? '<span class="check-mark">&#10003;</span>'
-                    : `<div class="quest-item-reward">
-                        <span class="points">${q.points}</span>
-                        <small>${q.diff}</small>
-                       </div>`
-                }
-            </div>
-        `;
-    }).join('');
+    // Split into frequency groups, completed at the end
+    const groups = {};
+    const completed = [];
+
+    filtered.forEach(q => {
+        if (state.completed.includes(q.id)) {
+            completed.push(q);
+        } else {
+            const freq = q.freq || 'monthly';
+            if (!groups[freq]) groups[freq] = [];
+            groups[freq].push(q);
+        }
+    });
+
+    let html = '';
+    let idx = 0;
+
+    FREQ_ORDER.forEach(freq => {
+        if (!groups[freq] || groups[freq].length === 0) return;
+        const isDaily = freq === 'daily';
+        html += `<div class="quest-section-header ${isDaily ? 'quest-section-daily' : ''}">${FREQ_LABELS[freq]}</div>`;
+        groups[freq].forEach(q => {
+            html += renderQuestCard(q, idx++);
+        });
+    });
+
+    // Quests without freq that aren't in FREQ_ORDER
+    const otherFreqs = Object.keys(groups).filter(f => !FREQ_ORDER.includes(f));
+    otherFreqs.forEach(freq => {
+        groups[freq].forEach(q => {
+            html += renderQuestCard(q, idx++);
+        });
+    });
+
+    if (completed.length > 0) {
+        html += `<div class="quest-section-header quest-section-done">✅ Выполненные</div>`;
+        completed.forEach(q => {
+            html += renderQuestCard(q, idx++);
+        });
+    }
+
+    list.innerHTML = html;
 
     list.querySelectorAll('.quest-item').forEach(item => {
         item.addEventListener('click', () => {
