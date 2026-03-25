@@ -1,6 +1,6 @@
 // ===== JU Heroes Training — Service Worker =====
 // ВАЖНО: при каждом деплое меняй APP_VERSION — это триггерит обновление у всех пользователей
-const APP_VERSION = '1.3.0';
+const APP_VERSION = '1.4.0';
 const CACHE_NAME = 'ju-heroes-' + APP_VERSION;
 
 // Файлы для предзагрузки в кеш (офлайн)
@@ -14,6 +14,7 @@ const PRECACHE = [
     './youtube_config.js',
     './analytics.js',
     './parent-dashboard.js',
+    './child-detail.js',
     './firebase-config.js',
     './firebase-sync.js',
 ];
