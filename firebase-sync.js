@@ -83,5 +83,8 @@ function isFirebaseReady() {
     return _fbReady;
 }
 
-// Init on script load
-document.addEventListener('DOMContentLoaded', initFirebase);
+// Init immediately — Firebase SDK scripts are loaded before this file,
+// so `firebase` global is already available. Do NOT wait for DOMContentLoaded:
+// app.js calls init() synchronously at parse time, which may trigger
+// showParentDashboard() before DOMContentLoaded fires.
+initFirebase();

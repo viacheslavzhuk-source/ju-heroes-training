@@ -1,6 +1,6 @@
 // ===== JU Heroes Training — Service Worker =====
 // ВАЖНО: при каждом деплое меняй APP_VERSION — это триггерит обновление у всех пользователей
-const APP_VERSION = '1.2.2';
+const APP_VERSION = '1.3.0';
 const CACHE_NAME = 'ju-heroes-' + APP_VERSION;
 
 // Файлы для предзагрузки в кеш (офлайн)
@@ -12,6 +12,10 @@ const PRECACHE = [
     './icons.js',
     './education.js',
     './youtube_config.js',
+    './analytics.js',
+    './parent-dashboard.js',
+    './firebase-config.js',
+    './firebase-sync.js',
 ];
 
 // Аудио кешируются лениво (при первом воспроизведении)
