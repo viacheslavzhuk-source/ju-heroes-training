@@ -280,7 +280,7 @@ function showScreen(id) {
     const screen = document.getElementById(id);
     screen.classList.add('active');
     document.getElementById('navbar').style.display =
-        (id === 'profile-screen' || id === 'parent-dashboard-screen') ? 'none' : '';
+        (id === 'profile-screen' || id === 'parent-dashboard-screen' || id === 'child-detail-screen') ? 'none' : '';
     if (id === 'dashboard-screen') updateNav();
 }
 
