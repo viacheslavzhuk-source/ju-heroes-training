@@ -1,5 +1,5 @@
 // ===== JU Heroes Training — Service Worker =====
-const CACHE_NAME = 'ju-heroes-v4';
+const CACHE_NAME = 'ju-heroes-v5';
 const ASSETS = [
     './',
     './index.html',

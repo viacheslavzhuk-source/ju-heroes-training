@@ -335,6 +335,11 @@
         </div>
     </div>
 
+    <script>
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('./sw.js').catch(() => {});
+    }
+    </script>
     <script src="https://www.youtube.com/iframe_api"></script>
     <script src="icons.js"></script>
     <script src="education.js"></script>
