@@ -2,7 +2,7 @@
 // Replace YOUR_YOUTUBE_ID_X with actual YouTube video IDs after uploading
 
 const YOUTUBE_MODULES = [
-    { id: 1, youtubeId: 'YOUR_YOUTUBE_ID_1', title: 'Знакомство с AI — твой новый суперинструмент', desc: 'Узнай что такое искусственный интеллект и как он работает', diff: 'Легко', points: 50 },
+    { id: 1, youtubeId: 'wpX_mBaubGw', title: 'Знакомство с AI — твой новый суперинструмент', desc: 'Узнай что такое искусственный интеллект и как он работает', diff: 'Легко', points: 50 },
     { id: 2, youtubeId: 'YOUR_YOUTUBE_ID_2', title: 'Как не поверить фейкам', desc: 'Научись проверять информацию и распознавать фейки', diff: 'Легко', points: 50 },
     { id: 3, youtubeId: 'YOUR_YOUTUBE_ID_3', title: 'Личный бренд в интернете', desc: 'Построй хороший образ в сети и защити себя', diff: 'Легко', points: 50 },
     { id: 4, youtubeId: 'YOUR_YOUTUBE_ID_4', title: 'Копирайтинг для начинающих', desc: 'Научись писать тексты, которые люди хотят читать', diff: 'Средне', points: 60 },
