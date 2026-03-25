@@ -1,12 +1,12 @@
 #!/bin/bash
 set -e
 
-# ===== JU Heroes Training — Deploy v1.1.0 =====
+# ===== JU Heroes Training — Deploy =====
 # Запусти этот скрипт из папки проекта на Mac:
 #   cd путь/к/Game/ju-heroes-training
 #   chmod +x deploy_to_github.sh && ./deploy_to_github.sh
 
-VERSION="v1.1.0"
+VERSION="v1.2.0"
 REPO_NAME="ju-heroes-training"
 
 echo ""
@@ -33,15 +33,8 @@ rm -f .git/index.lock
 
 # 4. Добавляем файлы и коммитим
 echo "📝 Коммит изменений..."
-git add app.js index.html style.css sw.js manifest.json education.js icons.js README.md CHANGELOG.md
-git commit -m "v1.1.0: Авторизация по пользователям, пуш-уведомления, PWA
-
-- 4 предустановленных профиля (Данил, Лев, Папа, Мама)
-- Раздельный прогресс для каждого пользователя
-- Семейный рейтинг с реальными данными
-- Пуш-уведомления (тренировки, достижения, уровни, серии)
-- Service Worker + PWA manifest
-- Панель настроек уведомлений" || echo "⚠️  Нет новых изменений для коммита"
+git add -A
+git commit -m "$VERSION: обновление приложения" || echo "⚠️  Нет новых изменений для коммита"
 
 # 5. Пушим
 echo "⬆️  Пуш в GitHub..."
@@ -61,7 +54,7 @@ if gh release view "$VERSION" &>/dev/null 2>&1; then
     echo "⚠️  Release $VERSION уже существует"
 else
     echo "📦 Создаю GitHub Release..."
-    gh release create "$VERSION" --title "$VERSION — Авторизация и уведомления" --notes-file CHANGELOG.md
+    gh release create "$VERSION" --title "$VERSION" --notes-file CHANGELOG.md
 fi
 
 echo ""
