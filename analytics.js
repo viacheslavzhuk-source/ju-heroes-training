@@ -22,6 +22,11 @@ function logEvent(userId, type, data) {
     };
     events.push(event);
     localStorage.setItem(ANALYTICS_KEY, JSON.stringify(events));
+
+    // Mirror to Firebase for real-time parent dashboard (no-op if not configured)
+    if (typeof writeEventToFirebase === 'function') {
+        writeEventToFirebase(event);
+    }
 }
 
 function getStats(userId, date) {

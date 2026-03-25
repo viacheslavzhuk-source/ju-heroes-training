@@ -351,8 +351,14 @@
         navigator.serviceWorker.register('./sw.js').catch(() => {});
     }
     </script>
+    <!-- Firebase Realtime Database (compat SDK — works as global) -->
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+
     <script src="https://www.youtube.com/iframe_api"></script>
     <script src="icons.js"></script>
+    <script src="firebase-config.js"></script>
+    <script src="firebase-sync.js"></script>
     <script src="analytics.js"></script>
     <script src="parent-dashboard.js"></script>
     <script src="education.js"></script>

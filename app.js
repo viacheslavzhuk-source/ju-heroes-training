@@ -256,6 +256,7 @@ function loginUser(userId) {
 }
 
 function logoutUser() {
+    if (typeof teardownParentDashboard === 'function') teardownParentDashboard();
     currentUserId = null;
     localStorage.removeItem(SESSION_KEY);
     state = defaultState();
@@ -278,7 +279,8 @@ function showScreen(id) {
     document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
     const screen = document.getElementById(id);
     screen.classList.add('active');
-    document.getElementById('navbar').style.display = (id === 'profile-screen') ? 'none' : '';
+    document.getElementById('navbar').style.display =
+        (id === 'profile-screen' || id === 'parent-dashboard-screen') ? 'none' : '';
     if (id === 'dashboard-screen') updateNav();
 }
 
