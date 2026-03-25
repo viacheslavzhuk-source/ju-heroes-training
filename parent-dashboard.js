@@ -19,13 +19,13 @@ const CAT_LABELS = {
     learn:  { label: 'Обучение',    icon: '📚' },
 };
 
-const STORAGE_PREFIX = 'ju-heroes-';
+const PD_STORAGE_PREFIX = 'ju-heroes-';
 
 // ── Helpers ────────────────────────────────────────────────────
 
 function loadChildState(childId) {
     try {
-        const raw = localStorage.getItem(STORAGE_PREFIX + childId);
+        const raw = localStorage.getItem(PD_STORAGE_PREFIX + childId);
         return raw ? JSON.parse(raw) : { completed: [], history: [] };
     } catch (e) {
         return { completed: [], history: [] };
