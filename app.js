@@ -567,6 +567,12 @@ document.getElementById('quest-back-btn').addEventListener('click', () => {
     updateDashboard();
 });
 
+// Logo & brand name → go to dashboard
+document.querySelector('.nav-brand').addEventListener('click', () => {
+    showScreen('dashboard-screen');
+    updateDashboard();
+});
+
 // ===== Video Upload =====
 const uploadZone = document.getElementById('upload-zone');
 const videoInput = document.getElementById('video-input');
