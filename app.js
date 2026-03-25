@@ -589,6 +589,7 @@ videoInput.addEventListener('change', (e) => {
     }
 
     selectedFile = file;
+    logEvent(currentUserId, 'video_upload', { questId: currentQuestId, filename: file.name });
     const url = URL.createObjectURL(file);
     document.getElementById('preview-video').src = url;
     document.getElementById('video-preview').hidden = false;
@@ -662,6 +663,7 @@ document.getElementById('submit-quest-btn').addEventListener('click', () => {
     });
 
     saveState();
+    logEvent(currentUserId, 'quest_complete', { questId: quest.id });
 
     // Push notifications
     JUNotifications.notifyQuestComplete(quest.name, quest.points);

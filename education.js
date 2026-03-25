@@ -1224,6 +1224,7 @@ function completeEduQuest(questId) {
     });
 
     saveState();
+    logEvent(currentUserId, 'edu_quest_complete', { questId: questId });
     stopAudio();
 
     document.getElementById('success-text').textContent = `Квест «${quest.name}» выполнен!`;
