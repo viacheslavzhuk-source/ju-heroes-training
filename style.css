@@ -114,13 +114,13 @@ body {
 .nav-brand {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 10px;
     font-weight: 800;
-    font-size: 1em;
+    font-size: 0.9em;
     color: var(--primary-light);
 }
 .nav-logo { color: var(--secondary); }
-.nav-logo-img { border-radius: 4px; }
+.nav-logo-img { width: 36px; height: 36px; border-radius: 6px; object-fit: contain; }
 .nav-user {
     display: flex;
     align-items: center;
@@ -200,7 +200,7 @@ body {
     50% { transform: scale(1.15); opacity: 0.3; }
 }
 .profile-logo-svg { position: relative; z-index: 1; }
-.profile-logo-img { position: relative; z-index: 1; max-width: 200px; height: auto; filter: drop-shadow(0 0 20px rgba(108,92,231,0.4)); }
+.profile-logo-img { position: relative; z-index: 1; max-width: 280px; width: 80%; height: auto; filter: drop-shadow(0 0 24px rgba(108,92,231,0.5)); }
 
 .profile-card {
     text-align: center;
