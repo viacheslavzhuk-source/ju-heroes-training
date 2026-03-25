@@ -293,7 +293,7 @@ function showChildDetail(childId, childName) {
         }
     });
 
-    const quests    = (typeof allQuests === 'function') ? allQuests() : [];
+    const quests    = ((typeof allQuests === 'function') ? allQuests() : []).filter(Boolean);
     const completed = quests.filter(q => completedIds.has(q.id));
     const active    = quests.filter(q => !completedIds.has(q.id));
 
