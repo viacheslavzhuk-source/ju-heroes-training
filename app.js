@@ -246,6 +246,11 @@ function loginUser(userId) {
     state.profile = { name: user.name, age: user.age, avatar: user.avatar };
     saveState();
 
+    if (userId === 'papa' || userId === 'mama') {
+        showParentDashboard(userId);
+        return;
+    }
+
     showScreen('dashboard-screen');
     updateDashboard();
 }
@@ -373,6 +378,14 @@ function hidePinModal() {
 document.getElementById('nav-profile-btn').addEventListener('click', () => {
     logoutUser();
     renderUserSelect();
+});
+
+// Parent dashboard logout button
+document.addEventListener('click', (e) => {
+    if (e.target.closest('#pd-logout-btn')) {
+        logoutUser();
+        renderUserSelect();
+    }
 });
 
 // ===== Dashboard =====
