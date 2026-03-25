@@ -120,6 +120,7 @@ body {
     color: var(--primary-light);
 }
 .nav-logo { color: var(--secondary); }
+.nav-logo-img { border-radius: 4px; }
 .nav-user {
     display: flex;
     align-items: center;
@@ -199,6 +200,7 @@ body {
     50% { transform: scale(1.15); opacity: 0.3; }
 }
 .profile-logo-svg { position: relative; z-index: 1; }
+.profile-logo-img { position: relative; z-index: 1; max-width: 200px; height: auto; filter: drop-shadow(0 0 20px rgba(108,92,231,0.4)); }
 
 .profile-card {
     text-align: center;

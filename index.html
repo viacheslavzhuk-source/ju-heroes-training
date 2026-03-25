@@ -9,6 +9,12 @@
     <link rel="stylesheet" href="style.css">
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#6c5ce7">
+    <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="icons/favicon-16.png">
+    <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="JU Heroes">
 </head>
 <body>
     <!-- Animated background -->
@@ -23,9 +29,7 @@
         <!-- Nav -->
         <nav id="navbar">
             <div class="nav-brand">
-                <svg class="nav-logo" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M6.5 6.5l11 11M6.5 17.5l11-11M12 2v4M12 18v4M2 12h4M18 12h4"/>
-                </svg>
+                <img src="icons/favicon-32.png" width="22" height="22" alt="JU" class="nav-logo-img">
                 <span>JU Heroes</span>
             </div>
             <div class="nav-user">
@@ -56,17 +60,7 @@
         <div id="profile-screen" class="screen active">
             <div class="profile-hero-visual">
                 <div class="profile-glow"></div>
-                <svg class="profile-logo-svg" viewBox="0 0 120 120" width="120" height="120">
-                    <defs>
-                        <linearGradient id="logo-grad" x1="0%" y1="0%" x2="100%" y2="100%">
-                            <stop offset="0%" style="stop-color:#a29bfe"/>
-                            <stop offset="100%" style="stop-color:#00cec9"/>
-                        </linearGradient>
-                    </defs>
-                    <circle cx="60" cy="60" r="55" fill="none" stroke="url(#logo-grad)" stroke-width="3" opacity="0.3"/>
-                    <circle cx="60" cy="60" r="45" fill="none" stroke="url(#logo-grad)" stroke-width="2" opacity="0.15"/>
-                    <text x="60" y="72" text-anchor="middle" font-size="50" fill="url(#logo-grad)">JU</text>
-                </svg>
+                <img src="icons/logo.png" alt="JU Heroes" class="profile-logo-img">
             </div>
             <div class="card glass profile-card">
                 <h1 class="title-gradient">Heroes Training</h1>
