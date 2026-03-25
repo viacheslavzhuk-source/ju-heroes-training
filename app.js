@@ -1052,6 +1052,41 @@ function updateNotifDot() {
     dot.hidden = JUNotifications.isEnabled();
 }
 
+// ===== Auto-Update System =====
+// Прогресс в localStorage — не сбрасывается при обновлении.
+// SW использует network-first, поэтому пользователи получают свежий код.
+// При активации нового SW показываем тост.
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.addEventListener('message', (e) => {
+        if (e.data && e.data.type === 'APP_UPDATED') {
+            showUpdateToast(e.data.version);
+        }
+    });
+
+    // Проверять обновления каждые 30 минут
+    navigator.serviceWorker.ready.then(reg => {
+        setInterval(() => reg.update(), 30 * 60 * 1000);
+    });
+}
+
+function showUpdateToast(version) {
+    // Не показывать если уже есть тост
+    if (document.getElementById('update-toast')) return;
+
+    const toast = document.createElement('div');
+    toast.id = 'update-toast';
+    toast.className = 'update-toast';
+    toast.innerHTML = `
+        <span>Обновление установлено!</span>
+        <button onclick="location.reload()">Обновить</button>
+        <button onclick="this.parentElement.remove()" class="update-toast-close">&times;</button>
+    `;
+    document.body.appendChild(toast);
+
+    // Автоскрытие через 15 секунд
+    setTimeout(() => { if (toast.parentElement) toast.remove(); }, 15000);
+}
+
 // ===== Start =====
 init();
 JUNotifications.init();

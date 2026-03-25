@@ -1,6 +1,10 @@
 // ===== JU Heroes Training — Service Worker =====
-const CACHE_NAME = 'ju-heroes-v5';
-const ASSETS = [
+// ВАЖНО: при каждом деплое меняй APP_VERSION — это триггерит обновление у всех пользователей
+const APP_VERSION = '1.2.0';
+const CACHE_NAME = 'ju-heroes-' + APP_VERSION;
+
+// Файлы для предзагрузки в кеш (офлайн)
+const PRECACHE = [
     './',
     './index.html',
     './style.css',
@@ -8,6 +12,10 @@ const ASSETS = [
     './icons.js',
     './education.js',
     './youtube_config.js',
+];
+
+// Аудио кешируются лениво (при первом воспроизведении)
+const LAZY_CACHE = [
     './audio/ai-1-audio-s1.mp3',
     './audio/ai-1-audio-s2.mp3',
     './audio/ai-1-audio-s3.mp3',
@@ -19,28 +27,70 @@ const ASSETS = [
     './audio/ai-5-audio-s3.mp3',
 ];
 
-// Install — cache assets
+// Install — кешируем основные файлы
 self.addEventListener('install', (e) => {
     e.waitUntil(
-        caches.open(CACHE_NAME).then(cache => cache.addAll(ASSETS))
+        caches.open(CACHE_NAME).then(cache => cache.addAll(PRECACHE))
     );
-    self.skipWaiting();
+    self.skipWaiting(); // Активировать сразу, не ждать закрытия вкладок
 });
 
-// Activate — clean old caches
+// Activate — удаляем старые кеши + уведомляем клиентов
 self.addEventListener('activate', (e) => {
     e.waitUntil(
         caches.keys().then(keys =>
             Promise.all(keys.filter(k => k !== CACHE_NAME).map(k => caches.delete(k)))
-        )
+        ).then(() => {
+            // Берём контроль над всеми вкладками
+            return self.clients.claim();
+        }).then(() => {
+            // Уведомляем все вкладки об обновлении
+            return self.clients.matchAll({ type: 'window' }).then(clients => {
+                clients.forEach(client => {
+                    client.postMessage({ type: 'APP_UPDATED', version: APP_VERSION });
+                });
+            });
+        })
     );
-    self.clients.claim();
 });
 
-// Fetch — cache-first
+// Fetch — network-first для HTML/JS/CSS, cache-first для аудио и картинок
 self.addEventListener('fetch', (e) => {
+    const url = new URL(e.request.url);
+
+    // Пропускаем внешние запросы (YouTube, Google, и т.д.)
+    if (url.origin !== self.location.origin) {
+        return;
+    }
+
+    // Аудио и картинки — cache-first (они не меняются)
+    if (url.pathname.match(/\.(mp3|png|jpg|svg|webp|ico)$/)) {
+        e.respondWith(
+            caches.match(e.request).then(cached => {
+                if (cached) return cached;
+                return fetch(e.request).then(resp => {
+                    if (resp.ok) {
+                        const clone = resp.clone();
+                        caches.open(CACHE_NAME).then(c => c.put(e.request, clone));
+                    }
+                    return resp;
+                });
+            })
+        );
+        return;
+    }
+
+    // HTML/JS/CSS — network-first (всегда свежая версия, кеш как фолбэк для офлайн)
     e.respondWith(
-        caches.match(e.request).then(cached => cached || fetch(e.request))
+        fetch(e.request).then(resp => {
+            if (resp.ok) {
+                const clone = resp.clone();
+                caches.open(CACHE_NAME).then(c => c.put(e.request, clone));
+            }
+            return resp;
+        }).catch(() => {
+            return caches.match(e.request);
+        })
     );
 });
 
@@ -68,8 +118,8 @@ self.addEventListener('message', (e) => {
         setTimeout(() => {
             self.registration.showNotification(title, {
                 body: body,
-                icon: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120"><rect width="120" height="120" rx="24" fill="%23080b16"/><text x="60" y="78" text-anchor="middle" font-size="50" fill="%236c5ce7" font-family="sans-serif" font-weight="bold">JU</text></svg>',
-                badge: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120"><rect width="120" height="120" rx="24" fill="%236c5ce7"/><text x="60" y="78" text-anchor="middle" font-size="50" fill="white" font-family="sans-serif" font-weight="bold">JU</text></svg>',
+                icon: './icons/icon-192.png',
+                badge: './icons/icon-192.png',
                 tag: tag,
                 renotify: true,
                 vibrate: [200, 100, 200],
@@ -81,10 +131,15 @@ self.addEventListener('message', (e) => {
     if (e.data && e.data.type === 'SHOW_NOTIFICATION') {
         self.registration.showNotification(e.data.title || 'JU Heroes', {
             body: e.data.body || '',
-            icon: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120"><rect width="120" height="120" rx="24" fill="%23080b16"/><text x="60" y="78" text-anchor="middle" font-size="50" fill="%236c5ce7" font-family="sans-serif" font-weight="bold">JU</text></svg>',
+            icon: './icons/icon-192.png',
             tag: e.data.tag || 'general',
             renotify: true,
             vibrate: [200, 100, 200],
         });
+    }
+
+    // Принудительное обновление по запросу
+    if (e.data && e.data.type === 'SKIP_WAITING') {
+        self.skipWaiting();
     }
 });
