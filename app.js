@@ -596,10 +596,18 @@ document.getElementById('quest-back-btn').addEventListener('click', () => {
     updateDashboard();
 });
 
-// Logo & brand name → go to dashboard
+// Logo & brand name → go to dashboard (reset to first tab)
 document.querySelector('.nav-brand').addEventListener('click', () => {
     showScreen('dashboard-screen');
+    // Reset to Квесты tab
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(tc => tc.classList.remove('active'));
+    const firstTab = document.querySelector('.tab[data-tab="quests"]');
+    const firstTabContent = document.getElementById('tab-quests');
+    if (firstTab) firstTab.classList.add('active');
+    if (firstTabContent) firstTabContent.classList.add('active');
     updateDashboard();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
 });
 
 // ===== Video Upload =====
