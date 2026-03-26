@@ -409,6 +409,7 @@ function updateDashboard() {
 
     renderQuests('all');
     renderHistory();
+    renderArchive();
     renderAchievements();
     renderLeaderboard();
     updateNav();
@@ -751,6 +752,127 @@ function renderHistory() {
             </div>
         `;
     }).join('');
+}
+
+// ===== Render Archive =====
+function renderArchive() {
+    const list = document.getElementById('archive-list');
+    const empty = document.getElementById('archive-empty');
+
+    const allQuests = getAllQuests();
+    const completedQuests = allQuests.filter(q => state.completed.includes(q.id));
+
+    if (completedQuests.length === 0) {
+        list.innerHTML = '';
+        empty.style.display = '';
+        return;
+    }
+
+    empty.style.display = 'none';
+
+    // Group by module/topic
+    const modules = {};
+    const physical = [];
+
+    completedQuests.forEach(q => {
+        if (q.cat === 'learn') {
+            const mod = q.module || 'other';
+            if (!modules[mod]) modules[mod] = { quests: [], name: '' };
+            modules[mod].quests.push(q);
+            // Use topic name from quest name if available
+            if (!modules[mod].name) {
+                modules[mod].name = q.name.replace(/^(Карточки|Тест|Инфографика|Аудио|Видео|Подкаст|Урок):\s*/i, '');
+            }
+        } else {
+            physical.push(q);
+        }
+    });
+
+    // Find completion date from history
+    function getCompletionDate(questId) {
+        const h = state.history.find(h => h.questId === questId);
+        if (!h) return null;
+        return new Date(h.date);
+    }
+
+    let html = '';
+
+    // Education modules
+    const moduleKeys = Object.keys(modules).sort((a, b) => {
+        const numA = parseInt(a.replace(/\D/g, '')) || 999;
+        const numB = parseInt(b.replace(/\D/g, '')) || 999;
+        return numA - numB;
+    });
+
+    if (moduleKeys.length > 0) {
+        html += '<div class="archive-section-header">📚 Образование</div>';
+        moduleKeys.forEach(mod => {
+            const group = modules[mod];
+            html += `<div class="archive-module">`;
+            html += `<div class="archive-module-title">${group.name}</div>`;
+            html += `<div class="archive-module-quests">`;
+            group.quests.forEach(q => {
+                const date = getCompletionDate(q.id);
+                const dateStr = date ? date.toLocaleDateString('ru-RU', { day: 'numeric', month: 'short' }) : '';
+                const typeBadge = {flashcard:'🃏', quiz:'📝', infographic:'📊', audio:'🎧', video:'🎬', podcast:'🎧', lesson:'📖'}[q.type] || '📄';
+                const typeLabel = {flashcard:'Карточки', quiz:'Тест', infographic:'Схема', audio:'Аудио', video:'Видео', podcast:'Подкаст', lesson:'Урок'}[q.type] || q.type;
+                const isEdu = q.cat === 'learn';
+                html += `
+                    <div class="archive-quest-item" data-quest-id="${q.id}" data-is-edu="${isEdu}">
+                        <span class="archive-quest-type">${typeBadge}</span>
+                        <div class="archive-quest-info">
+                            <span class="archive-quest-name">${typeLabel}</span>
+                            <span class="archive-quest-date">${dateStr}</span>
+                        </div>
+                        <span class="archive-quest-points">+${q.points}</span>
+                        <span class="archive-quest-open">▸</span>
+                    </div>
+                `;
+            });
+            html += `</div></div>`;
+        });
+    }
+
+    // Physical quests
+    if (physical.length > 0) {
+        html += '<div class="archive-section-header">💪 Тренировки</div>';
+        physical.forEach(q => {
+            const date = getCompletionDate(q.id);
+            const dateStr = date ? date.toLocaleDateString('ru-RU', { day: 'numeric', month: 'short' }) : '';
+            html += `
+                <div class="archive-quest-item" data-quest-id="${q.id}" data-is-edu="false">
+                    <span class="archive-quest-type">${q.icon}</span>
+                    <div class="archive-quest-info">
+                        <span class="archive-quest-name">${q.name}</span>
+                        <span class="archive-quest-date">${dateStr}</span>
+                    </div>
+                    <span class="archive-quest-points">+${q.points}</span>
+                    <span class="archive-quest-open">▸</span>
+                </div>
+            `;
+        });
+    }
+
+    // Total stats
+    const totalPoints = completedQuests.reduce((sum, q) => sum + q.points, 0);
+    html = `<div class="archive-stats">
+        <span>✅ ${completedQuests.length} выполнено</span>
+        <span>⭐ ${totalPoints} очков</span>
+    </div>` + html;
+
+    list.innerHTML = html;
+
+    // Click handlers to re-open quests
+    list.querySelectorAll('.archive-quest-item').forEach(item => {
+        item.addEventListener('click', () => {
+            const isEdu = item.dataset.isEdu === 'true';
+            if (isEdu && typeof openEduQuest === 'function') {
+                openEduQuest(item.dataset.questId);
+            } else {
+                openQuest(item.dataset.questId);
+            }
+        });
+    });
 }
 
 // ===== Render Achievements =====

@@ -2642,3 +2642,88 @@ body {
 /* ===== Type badges for new types ===== */
 .type-podcast { background: rgba(253,203,110,0.12); color: #fdcb6e; border-color: rgba(253,203,110,0.25); }
 .type-lesson { background: rgba(0,184,148,0.12); color: #00b894; border-color: rgba(0,184,148,0.25); }
+
+/* ===== Archive Tab ===== */
+.archive-stats {
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+    padding: 14px 16px;
+    margin-bottom: 16px;
+    background: rgba(108,92,231,0.1);
+    border-radius: 14px;
+    border: 1px solid rgba(108,92,231,0.2);
+    font-size: 0.95em;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+.archive-section-header {
+    font-size: 1em;
+    font-weight: 700;
+    color: var(--text-secondary);
+    margin: 18px 0 10px;
+    padding: 0 4px;
+}
+.archive-module {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 16px;
+    margin-bottom: 12px;
+    overflow: hidden;
+}
+.archive-module-title {
+    padding: 12px 16px 8px;
+    font-size: 0.95em;
+    font-weight: 700;
+    color: var(--primary-light);
+}
+.archive-module-quests {
+    padding: 0 8px 8px;
+}
+.archive-quest-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: background 0.15s;
+}
+.archive-quest-item:hover,
+.archive-quest-item:active {
+    background: rgba(108,92,231,0.08);
+}
+.archive-quest-type {
+    font-size: 1.3em;
+    width: 32px;
+    text-align: center;
+    flex-shrink: 0;
+}
+.archive-quest-info {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+.archive-quest-name {
+    font-size: 0.9em;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+.archive-quest-date {
+    font-size: 0.75em;
+    color: var(--text-muted);
+}
+.archive-quest-points {
+    font-size: 0.8em;
+    font-weight: 700;
+    color: var(--accent);
+    flex-shrink: 0;
+}
+.archive-quest-open {
+    font-size: 1em;
+    color: var(--text-muted);
+    flex-shrink: 0;
+    opacity: 0.5;
+}

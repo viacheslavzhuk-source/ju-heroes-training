@@ -129,6 +129,10 @@
                     <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/></svg>
                     Награды
                 </button>
+                <button class="tab" data-tab="archive">
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>
+                    Архив
+                </button>
                 <button class="tab" data-tab="leaderboard">
                     <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
                     Рейтинг
@@ -170,6 +174,17 @@
                     </div>
                     <p>Пока нет загруженных видео</p>
                     <p class="small">Выполни квест и загрузи видео!</p>
+                </div>
+            </div>
+
+            <div id="tab-archive" class="tab-content">
+                <div id="archive-list" class="archive-list"></div>
+                <div id="archive-empty" class="empty-state">
+                    <div class="empty-icon-wrap">
+                        <svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.4"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>
+                    </div>
+                    <p>Архив пока пуст</p>
+                    <p class="small">Выполняй квесты — они появятся здесь для повторения!</p>
                 </div>
             </div>
 
