@@ -1,6 +1,6 @@
 // ===== JU Heroes Training — Service Worker =====
 // ВАЖНО: при каждом деплое меняй APP_VERSION — это триггерит обновление у всех пользователей
-const APP_VERSION = '1.5.0';
+const APP_VERSION = '1.5.1';
 const CACHE_NAME = 'ju-heroes-' + APP_VERSION;
 
 // Файлы для предзагрузки в кеш (офлайн)

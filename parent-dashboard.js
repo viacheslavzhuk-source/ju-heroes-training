@@ -211,6 +211,12 @@ function renderParentDashboard(parentId, events) {
     const sourceLabel = isLive ? '🟢 В реальном времени' : '🔴 Только локальные данные';
 
     let html = `
+        <div class="pd-nav">
+            <button class="back-btn" id="pd-logout-btn">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+                Выйти
+            </button>
+        </div>
         <div class="pd-header">
             <div class="pd-greeting">Привет, ${parentUser.emoji} ${parentUser.name}!</div>
             <div class="pd-subtitle">Прогресс детей</div>
