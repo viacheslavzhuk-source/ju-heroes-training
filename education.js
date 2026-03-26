@@ -1914,6 +1914,8 @@ function setAudioPlaying(playing) {
     const vis = document.getElementById('audio-visualizer');
     const status = document.getElementById('audio-status');
 
+        if (!btn || !vis || !status) return;
+
     if (playing) {
         btn.innerHTML = '⏸ Пауза';
         vis.classList.add('playing');
